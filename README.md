@@ -10,7 +10,6 @@ Warning, we me end up merging this gem with Dradis::Core!!
 
 The plugin requires Dradis 3.0 or higher.
 
-
 ## More information
 
 See the Dradis Framework's [README.md](https://github.com/dradis/dradisframework/blob/master/README.md)

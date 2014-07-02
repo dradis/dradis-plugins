@@ -1,24 +1,45 @@
 require 'dradis/plugins/engine'
 require 'dradis/plugins/version'
 
+require 'dradis/plugins/content_service'
+require 'dradis/plugins/template_service'
+require 'dradis/plugins/upload'
+
 module Dradis
   module Plugins
     module Base
       def self.included(base)
         base.extend ClassMethods
         base.class_eval do
-          mattr_accessor :plugin_name
+          # mattr_accessor :plugin_name
+
           @features = []
+          @name = 'Use plugin_info(args) with :name to provide a name for this plugin.'
           Plugins::register(self)
         end
       end
 
       module ClassMethods
+        # def options(key)
+        #   @options[key]
+        # end
+        #
+        # def plugin_info(args={})
+        #   features = args.delete(:provides)
+        #   provides(features)
+        #   @options = args
+        # end
+
         def provides(*list)
           @features = list
         end
+
         def provides?(feature)
           @features.include?(feature)
+        end
+
+        def plugin_name
+          self.name.split('::')[2].underscore.to_sym
         end
       end
     end
