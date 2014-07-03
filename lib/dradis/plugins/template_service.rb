@@ -1,7 +1,7 @@
 module Dradis
   module Plugins
     class TemplateService
-      attr_accessor :template, :templates_dir
+      attr_accessor :logger, :template, :templates_dir
 
       def initialize(args={})
         @plugin = args[:plugin]

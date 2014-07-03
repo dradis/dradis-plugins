@@ -1,7 +1,7 @@
 module Dradis
   module Plugins
     class ContentService
-      attr_accessor :plugin
+      attr_accessor :logger, :plugin
 
       def initialize(args={})
         @plugin = args[:plugin]

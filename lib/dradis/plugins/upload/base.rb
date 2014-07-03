@@ -13,6 +13,9 @@ module Dradis
           @content_service = args[:content_service] || default_content_service
           @template_service = args[:template_service] || default_template_service
 
+          content_service.logger = logger
+          template_service.logger = logger
+
           post_initialize(args)
         end
 
