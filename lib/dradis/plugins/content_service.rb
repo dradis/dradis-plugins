@@ -7,6 +7,22 @@ module Dradis
         @plugin = args[:plugin]
       end
 
+      # Create a hash with all issues where the keys correspond to the field passed
+      # as an argument.
+      #
+      # This is use by the plugins to check whether a given issue is already in
+      # the project.
+      def all_issues_by_field(field)
+        # we don't memoize it because we want it to reflect recently added Issues
+        klass = class_for(:issue)
+
+        issues_map = klass.where(category_id: default_issue_category.id).map do |issue|
+          [issue.fields[field], issue]
+        end
+        Hash[issues_map]
+      end
+
+
       def create_node(args={})
         label   = args[:label] || "create_node() invoked by #{plugin} without a :label parameter"
         type_id = args[:type_id] || default_node_type
@@ -24,6 +40,9 @@ module Dradis
 
       def create_issue(args={})
         text = args[:text] || "create_issue() invoked by #{plugin} without a :text parameter"
+
+        # we inject the source Plugin into the issue's text
+        text << "\n\n#[plugin]#\n#{plugin::Engine::plugin_name}\n"
 
         class_for(:issue).create(text: text) do |i|
           i.author   = default_author
@@ -47,7 +66,7 @@ module Dradis
 
 
       def default_author
-        @default_author ||= "#{plugin.to_s.capitalize} upload plugin"
+        @default_author ||= "#{plugin::Engine.plugin_name.to_s.humanize} upload plugin"
       end
 
       def default_issue_category
