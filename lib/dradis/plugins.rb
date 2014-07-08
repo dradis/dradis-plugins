@@ -3,6 +3,8 @@ require 'dradis/plugins/version'
 
 require 'dradis/plugins/content_service'
 require 'dradis/plugins/template_service'
+
+require 'dradis/plugins/import'
 require 'dradis/plugins/upload'
 
 module Dradis
