@@ -9,7 +9,7 @@ module Dradis
       MAJOR = 3
       MINOR = 0
       TINY = 0
-      PRE = nil
+      PRE = 'pre'
 
       STRING = [MAJOR, MINOR, TINY, PRE].compact.join(".")
     end

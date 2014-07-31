@@ -1,10 +1,12 @@
 $:.push File.expand_path('../lib', __FILE__)
 
+require 'dradis/plugins/version'
+
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.platform      = Gem::Platform::RUBY
   s.name = 'dradis-plugins'
-  s.version = '3.0.0'
+  s.version = Dradis::Plugins::VERSION::STRING
   s.summary = 'Plugin manager for the Dradis Framework project.'
   s.description = 'Required dependency for Dradis Framework.'
 
