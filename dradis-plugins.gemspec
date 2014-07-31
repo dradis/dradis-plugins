@@ -3,22 +3,25 @@ $:.push File.expand_path('../lib', __FILE__)
 require 'dradis/plugins/version'
 
 # Describe your gem and declare its dependencies:
-Gem::Specification.new do |s|
-  s.platform      = Gem::Platform::RUBY
-  s.name = 'dradis-plugins'
-  s.version = Dradis::Plugins::VERSION::STRING
-  s.summary = 'Plugin manager for the Dradis Framework project.'
-  s.description = 'Required dependency for Dradis Framework.'
+Gem::Specification.new do |spec|
+  spec.platform      = Gem::Platform::RUBY
+  spec.name = 'dradis-plugins'
+  spec.version = Dradis::Plugins::VERSION::STRING
+  spec.summary = 'Plugin manager for the Dradis Framework project.'
+  spec.description = 'Required dependency for Dradis Framework.'
 
-  s.license = 'GPL-2'
+  spec.license = 'GPL-2'
 
-  s.authors = ['Daniel Martin']
-  s.email = ['etd@nomejortu.com']
-  s.homepage = 'http://dradisframework.org'
+  spec.authors = ['Daniel Martin']
+  spec.email = ['etd@nomejortu.com']
+  spec.homepage = 'http://dradisframework.org'
 
-  s.files = `git ls-files`.split($\)
-  s.executables = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  s.test_files = s.files.grep(%r{^(test|spec|features)/})
+  spec.files = `git ls-files`.split($\)
+  spec.executables = spec.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
+
+  spec.add_development_dependency 'bundler', '~> 1.6'
+  spec.add_development_dependency 'rake', '~> 10.0'
 
   # By not including Rails as a dependency, we can use the gem with different
   # versions of Rails (a sure recipe for disaster, I'm sure), which is needed
