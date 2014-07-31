@@ -32,16 +32,24 @@ module Dradis
         #   @options = args
         # end
 
+        def description(new_description)
+          @description = new_description
+        end
+
+        def plugin_description
+          @description ||= "This plugin doesn't provide a :description"
+        end
+
+        def plugin_name
+          self.name.split('::')[2].underscore.to_sym
+        end
+
         def provides(*list)
           @features = list
         end
 
         def provides?(feature)
           @features.include?(feature)
-        end
-
-        def plugin_name
-          self.name.split('::')[2].underscore.to_sym
         end
       end
     end
