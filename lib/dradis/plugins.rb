@@ -4,6 +4,7 @@ require 'dradis/plugins/version'
 require 'dradis/plugins/content_service'
 require 'dradis/plugins/template_service'
 
+require 'dradis/plugins/export'
 require 'dradis/plugins/import'
 require 'dradis/plugins/upload'
 
@@ -22,16 +23,6 @@ module Dradis
       end
 
       module ClassMethods
-        # def options(key)
-        #   @options[key]
-        # end
-        #
-        # def plugin_info(args={})
-        #   features = args.delete(:provides)
-        #   provides(features)
-        #   @options = args
-        # end
-
         def description(new_description)
           @description = new_description
         end
