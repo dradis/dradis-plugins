@@ -8,6 +8,8 @@ require 'dradis/plugins/export'
 require 'dradis/plugins/import'
 require 'dradis/plugins/upload'
 
+require 'dradis/plugins/templates'
+
 module Dradis
   module Plugins
     module Base
@@ -20,6 +22,9 @@ module Dradis
           @name = 'Use plugin_info(args) with :name to provide a name for this plugin.'
           Plugins::register(self)
         end
+
+        # Extend the engine with other functionality
+        base.send :include, Dradis::Plugins::Templates
       end
 
       module ClassMethods
