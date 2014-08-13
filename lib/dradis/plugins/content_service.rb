@@ -90,7 +90,7 @@ module Dradis
       end
 
       def default_parent_node
-        @default_parent_node ||= class_for(:node).create(label: 'plugin.output')
+        @default_parent_node ||= class_for(:node).find_or_create_by(label: 'plugin.output')
       end
 
       def issuelib
