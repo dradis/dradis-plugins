@@ -25,10 +25,18 @@ module Dradis
 
       def create_node(args={})
         label   = args[:label] || "create_node() invoked by #{plugin} without a :label parameter"
-        type_id = args[:type_id] || default_node_type
         parent  = args[:parent] || default_parent_node
+        type_id = begin
+          tmp_type = args[:type].to_s.upcase
+          class_for(:node)::Types::const_defined?(tmp_type) ? "#{class_for(:node)::Types}::#{tmp_type}".constantize : default_node_type
+        end
 
-        parent.children.find_or_create_by_label_and_type_id(label, type_id)
+        # FIXME: how ugly is this?
+        if Rails::VERSION::MAJOR == 3
+          parent.children.find_or_create_by_label_and_type_id(label, type_id)
+        else
+          parent.children.find_or_create_by(label: label, type_id: type_id)
+        end
       end
 
       def create_note(args={})
