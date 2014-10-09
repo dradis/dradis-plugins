@@ -4,7 +4,7 @@
 module Dradis
   module Plugins
     module Upload
-      class Base
+      class Importer
         attr_accessor :content_service, :logger, :template_service
 
         def initialize(args={})
@@ -35,7 +35,7 @@ module Dradis
         def default_template_service
           @template ||= Dradis::Plugins::TemplateService.new
         end
-      end # Base
+      end # Importer
 
     end # Upload
   end # Plugins
