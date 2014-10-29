@@ -3,8 +3,18 @@ module Dradis
     class ContentService
       attr_accessor :logger, :plugin
 
+      # ----------------------------------------------------------- Initializer
+      #
+
       def initialize(args={})
         @plugin = args[:plugin]
+      end
+
+
+      # ------------------------------------------------------ Query operations
+
+      def all_issues
+        class_for(:issue).where(category_id: default_issue_category.id)
       end
 
       # Create a hash with all issues where the keys correspond to the field passed
@@ -22,6 +32,12 @@ module Dradis
         Hash[issues_map]
       end
 
+      # def all_notes
+      #
+      # end
+
+      # ----------------------------------------------------- Create operations
+      #
 
       def create_node(args={})
         label   = args[:label] || "create_node() invoked by #{plugin} without a :label parameter"
@@ -67,7 +83,9 @@ module Dradis
         node.evidence.create(issue_id: issue.id, content: content)
       end
 
+
       private
+
       def class_for(model)
         "Dradis::Core::#{model.to_s.capitalize}".constantize
       end
