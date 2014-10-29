@@ -95,7 +95,7 @@ module Dradis
       # This method returns the default location in which plugins should look
       # for their templates.
       def default_templates_dir
-        @default_templates_dir ||= Rails.root.join('templates', 'plugins', @plugin::Engine::plugin_name.to_s)
+        @default_templates_dir ||= Rails.root.join('templates', 'plugins', @plugin::meta[:name].to_s)
       end
     end
   end

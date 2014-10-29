@@ -42,6 +42,9 @@ module Dradis
 
         def provides(*list)
           @features = list
+          if list.include?(:upload)
+            include Dradis::Plugins::Upload::Base
+          end
         end
 
         def provides?(feature)
