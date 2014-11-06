@@ -16,12 +16,12 @@ module Dradis
           # register_filter :by_osvdb_id do
           #   def c
           # end
-          def add(label, filter, &block)
+          def add(plugin, label, filter, &block)
             filter ||= Class.new(Dradis::Plugins::Import::Filters::Base)
             filter.class_eval(&block) if block_given?
 
             unless filter.method_defined?(:query)
-              raise NoMethodError, "query() is not declared in the #{label.inspect} strategy"
+              raise NoMethodError, "query() is not declared in the #{label.inspect} filter"
             end
 
             base = Dradis::Plugins::Import::Filters::Base
@@ -29,13 +29,14 @@ module Dradis
               raise "#{label.inspect} is not a #{base}"
             end
 
-            _filters[label] = filter
+            _filters[plugin]        = {} unless _filters.key?(plugin)
+            _filters[plugin][label] = filter
           end
 
-          # Provides access to strategies by label
+          # Provides access to filters by plugin
           # :api: public
-          def [](label)
-            _filters[label]
+          def [](plugin)
+            _filters[plugin]
           end
 
           # :api: private
