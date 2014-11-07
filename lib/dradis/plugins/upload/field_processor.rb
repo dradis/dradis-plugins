@@ -22,6 +22,12 @@ module Dradis
           field = args[:field]
           "Sorry, this plugin doesn't define a FieldProcessor (called for [#{field}])"
         end
+
+        protected
+        # This can be overriden by subclasses
+        def post_initialize(args={})
+          # nop
+        end
       end
 
     end
