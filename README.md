@@ -1,6 +1,6 @@
 # Plugin manager for the Dradis Framework
 
-[![Build Status](https://secure.travis-ci.org/dradis/dradis-plugins.png?branch=master)](http://travis-ci.org/dradis/dradis-plugins)
+[![Build Status](https://secure.travis-ci.org/dradis/dradis-plugins.png?branch=master)](http://travis-ci.org/dradis/dradis-plugins) [![Code Climate](https://codeclimate.com/github/dradis/dradis-plugins.png)](https://codeclimate.com/github/dradis/dradis-plugins.png)
 
 This gem contains the base classes needed to manage the plugins in Dradis.
 
