@@ -1,18 +1,10 @@
-require 'dradis/plugins/engine'
-require 'dradis/plugins/version'
-
-require 'dradis/plugins/content_service'
-require 'dradis/plugins/template_service'
-
-require 'dradis/plugins/base'
-require 'dradis/plugins/export'
-require 'dradis/plugins/import'
-require 'dradis/plugins/upload'
-
-require 'dradis/plugins/templates'
-
 module Dradis
   module Plugins
+    mattr_accessor :configuration_class
+    def self.setup(&block)
+      yield self
+    end
+
     class << self
       @@extensions = []
 
@@ -72,3 +64,20 @@ module Dradis
     end
   end
 end
+
+
+require 'dradis/plugins/engine'
+require 'dradis/plugins/version'
+
+require 'dradis/plugins/content_service'
+require 'dradis/plugins/template_service'
+
+require 'dradis/plugins/base'
+require 'dradis/plugins/export'
+require 'dradis/plugins/import'
+require 'dradis/plugins/upload'
+
+# Common functionality
+require 'dradis/plugins/configurable'
+require 'dradis/plugins/settings'
+require 'dradis/plugins/templates'
