@@ -15,8 +15,8 @@ module Dradis::Plugins
         @settings_namespace || plugin_name
       end
 
-      def addon_settings(namespace, &block)
-        @settings_namespace = namespace
+      def addon_settings(namespace = nil, &block)
+        @settings_namespace = namespace if namespace
         yield self if block_given?
       end
 
