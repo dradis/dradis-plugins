@@ -40,7 +40,7 @@ module Dradis::Plugins
       if configuration_class.exists?(name: namespaced_key)
         configuration_class.where(name: namespaced_key).first.try(:value)
       else
-        @@options[name]
+        @@options[key]
       end
     end
   end
