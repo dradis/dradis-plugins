@@ -14,6 +14,10 @@ module Dradis
       # initializer 'frontend.asset_precompile_paths' do |app|
       #   app.config.assets.precompile += ["dradis/frontend/manifests/*"]
       # end
+
+      Dradis::Plugins::setup do |config|
+        config.configuration_class = 'Dradis::Core::Configuration'
+      end
     end
   end
 end

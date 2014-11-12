@@ -12,6 +12,7 @@ module Dradis
         end
 
         # Extend the engine with other functionality
+        base.send :include, Dradis::Plugins::Configurable
         base.send :include, Dradis::Plugins::Templates
       end
 
