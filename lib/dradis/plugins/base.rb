@@ -14,6 +14,7 @@ module Dradis
         # Extend the engine with other functionality
         base.send :include, Dradis::Plugins::Configurable
         base.send :include, Dradis::Plugins::Templates
+        base.send :include, Dradis::Plugins::Thor
       end
 
       module ClassMethods
