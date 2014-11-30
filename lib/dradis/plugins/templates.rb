@@ -13,12 +13,13 @@ module Dradis
       module ClassMethods
         def copy_templates(args={})
           destination = args[:to]
-
           raise ArgumentError.new(':copy_templates called without a :to parameter') unless destination
-          FileUtils.mkdir_p(destination) if plugin_templates.any?
+
+          destination_dir = File.join(destination, plugin_name.to_s)
+          FileUtils.mkdir_p(destination_dir) if plugin_templates.any?
 
           plugin_templates.each do |template|
-            destination_file = File.join(destination, File.basename(template))
+            destination_file = File.join(destination_dir, File.basename(template))
             next if File.exist?(destination_file)
 
             Rails.logger.info{ "Updating templates for #{plugin_name} plugin. Destination: #{destination}" }
