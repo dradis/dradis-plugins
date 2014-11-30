@@ -12,12 +12,12 @@ module Dradis
 
       module ClassMethods
         def load_thor_tasks
-          thor_files.each do |thorfile|
+          plugin_thorfiles.each do |thorfile|
             require thorfile
           end
         end
 
-        def thor_files(args={})
+        def plugin_thorfiles(args={})
           if paths['dradis/thorfiles'].existent.any?
             Dir["%s/thorfile.rb" % paths['dradis/thorfiles'].existent]
           else
