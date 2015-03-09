@@ -17,6 +17,7 @@ module Dradis
 
       Dradis::Plugins::setup do |config|
         config.configuration_class = 'Dradis::Core::Configuration'
+        config.base_export_controller_class = 'Dradis::Frontend::AuthenticatedController'
       end
     end
   end
