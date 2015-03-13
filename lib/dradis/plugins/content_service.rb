@@ -50,9 +50,9 @@ module Dradis
         end
       end
 
-      # def all_notes
-      #
-      # end
+      def all_notes
+        class_for(:note).where(category_id: class_for(:category).report.id)
+      end
 
       # ----------------------------------------------------- Create operations
       #
