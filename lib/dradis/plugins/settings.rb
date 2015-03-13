@@ -16,14 +16,14 @@ module Dradis::Plugins
       @default_options.map do |key, value|
         {
           name: key,
-          value: value = db_setting_or_current_or_default(key),
+          value: value = dirty_or_db_setting_or_default(key),
           default: is_default?(key, value)
         }
       end
     end
 
-    def save!
-      @dirty_options.reject{ |k, v| is_default?(k, v) }.each{ |k, v| write_to_db(k, v) }
+    def save
+      @dirty_options.reject{ |k, v| v.present? && v == db_setting(k) }.each{ |k, v| write_to_db(k, v) }
     end
 
     private
@@ -34,8 +34,8 @@ module Dradis::Plugins
         @default_options[$1.to_sym] = args.first
       elsif name.to_s =~ /=$/
         @dirty_options[$`.to_sym] = args.first
-      elsif @dirty_options.key?(name)
-        db_setting_or_default(name)
+      elsif @default_options.key?(name)
+        dirty_or_db_setting_or_default(name)
       else
         super
       end
@@ -57,14 +57,18 @@ module Dradis::Plugins
       value == @default_options[key]
     end
 
+    def db_setting(key)
+      configuration_class.where(name: namespaced_key(key)).first.value rescue nil
+    end
+
     # This method looks up in the configuration repository DB to see if the
     # user has provided a value for the given setting. If not, the default
     # value is returned.
-    def db_setting_or_current_or_default(key)
-      if configuration_class.exists?(name: namespaced_key(key))
-        configuration_class.where(name: namespaced_key(key)).first.try(:value)
-      elsif @dirty_options[key].present?
+    def dirty_or_db_setting_or_default(key)
+      if @dirty_options.key?(key)
         @dirty_options[key]
+      elsif configuration_class.exists?(name: namespaced_key(key))
+        db_setting(key)
       else
         @default_options[key]
       end
