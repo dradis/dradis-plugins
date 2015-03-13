@@ -4,20 +4,37 @@ module Dradis::Plugins
 
     def initialize(namespace)
       @namespace = namespace
-      @@options ||= {}
+      @dirty_options ||= {}
+      @default_options ||= {}
     end
 
     def respond_to?(name)
-      super || @@options.key?(name.to_sym)
+      super || @dirty_options.key?(name.to_sym)
+    end
+
+    def all
+      @default_options.map do |key, value|
+        {
+          name: key,
+          value: value = db_setting_or_current_or_default(key),
+          default: is_default?(key, value)
+        }
+      end
+    end
+
+    def save!
+      @dirty_options.reject{ |k, v| is_default?(k, v) }.each{ |k, v| write_to_db(k, v) }
     end
 
     private
 
     # ---------------------------------------------------- Method missing magic
     def method_missing(name, *args, &blk)
-      if name.to_s =~ /=$/
-        @@options[$`.to_sym] = args.first
-      elsif @@options.key?(name)
+      if name.to_s =~ /^default_(.*)=$/
+        @default_options[$1.to_sym] = args.first
+      elsif name.to_s =~ /=$/
+        @dirty_options[$`.to_sym] = args.first
+      elsif @dirty_options.key?(name)
         db_setting_or_default(name)
       else
         super
@@ -31,17 +48,31 @@ module Dradis::Plugins
       @klass ||= Dradis::Plugins::configuration_class.to_s.constantize
     end
 
+    def write_to_db(key, value)
+      db_setting = configuration_class.find_or_create_by_name(namespaced_key(key))
+      db_setting.update_attribute(:value, value)
+    end
+
+    def is_default?(key, value)
+      value == @default_options[key]
+    end
+
     # This method looks up in the configuration repository DB to see if the
     # user has provided a value for the given setting. If not, the default
     # value is returned.
-    def db_setting_or_default(key)
-      namespaced_key = [self.namespace.to_s, key.to_s.underscore].join(":")
-
-      if configuration_class.exists?(name: namespaced_key)
-        configuration_class.where(name: namespaced_key).first.try(:value)
+    def db_setting_or_current_or_default(key)
+      if configuration_class.exists?(name: namespaced_key(key))
+        configuration_class.where(name: namespaced_key(key)).first.try(:value)
+      elsif @dirty_options[key].present?
+        @dirty_options[key]
       else
-        @@options[key]
+        @default_options[key]
       end
+    end
+
+    # Builds namespaced key
+    def namespaced_key(key)
+      [self.namespace.to_s, key.to_s.underscore].join(":")
     end
   end
 end
