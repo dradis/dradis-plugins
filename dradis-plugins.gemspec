@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bundler', '~> 1.6'
   spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rspec-rails'
 
   # By not including Rails as a dependency, we can use the gem with different
   # versions of Rails (a sure recipe for disaster, I'm sure), which is needed
