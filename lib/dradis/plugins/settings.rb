@@ -26,6 +26,13 @@ module Dradis::Plugins
       @dirty_options.reject{ |k, v| v.present? && v == db_setting(k) }.each{ |k, v| write_to_db(k, v) }
     end
 
+    def reset_defaults!
+      @dirty_options = {}
+      @default_options.each do |key, value|
+        configuration_class.where(name: namespaced_key(key)).each(&:destroy)
+      end
+    end
+
     private
 
     # ---------------------------------------------------- Method missing magic
