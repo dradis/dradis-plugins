@@ -26,6 +26,13 @@ module Dradis::Plugins
       @dirty_options.reject{ |k, v| v.present? && v == db_setting(k) }.each{ |k, v| write_to_db(k, v) }
     end
 
+    def update_settings(opts = {})
+      opts.each do |k, v|
+        @dirty_options[k.to_sym] = v
+      end
+      save
+    end
+
     def reset_defaults!
       @dirty_options = {}
       @default_options.each do |key, value|
