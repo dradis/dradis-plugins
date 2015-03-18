@@ -40,6 +40,10 @@ module Dradis::Plugins
       end
     end
 
+    def is_default?(key, value)
+      value.to_s == @default_options[key.to_sym].to_s
+    end
+
     private
 
     # ---------------------------------------------------- Method missing magic
@@ -67,9 +71,6 @@ module Dradis::Plugins
       db_setting.update_attribute(:value, value)
     end
 
-    def is_default?(key, value)
-      value == @default_options[key]
-    end
 
     def db_setting(key)
       configuration_class.where(name: namespaced_key(key)).first.value rescue nil

@@ -54,6 +54,12 @@ describe Dradis::Plugins::Settings do
 
 end
 
+describe Dradis::Plugins::Settings, '#is_default?' do
+  it 'knows if a string value equals its default integer value' do
+    TestEngine::settings.is_default?(:port, '80')
+  end
+end
+
 describe Dradis::Plugins::Settings, '#all' do
   it 'returns values from db, dirty state or default as needed and tells which one is default' do
     TestEngine::settings.host = '127.0.0.1'
