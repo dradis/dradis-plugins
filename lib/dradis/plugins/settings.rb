@@ -19,7 +19,7 @@ module Dradis::Plugins
           value: value = dirty_or_db_setting_or_default(key),
           default: is_default?(key, value)
         }
-      end
+      end.sort_by{ |o| o[:name] }
     end
 
     def save
