@@ -27,7 +27,7 @@ module Dradis::Plugins
     end
 
     def update_settings(opts = {})
-      opts.each do |k, v|
+      opts.select{ |k, v| @default_options.key?(k) }.each do |k, v|
         @dirty_options[k.to_sym] = v
       end
       save
