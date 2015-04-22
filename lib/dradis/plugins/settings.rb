@@ -5,7 +5,7 @@ module Dradis::Plugins
     def initialize(namespace)
       @namespace = namespace
       @dirty_options ||= {}
-      @default_options ||= {}
+      @default_options ||= HashWithIndifferentAccess.new
     end
 
     def respond_to?(name)
@@ -15,8 +15,8 @@ module Dradis::Plugins
     def all
       @default_options.map do |key, value|
         {
-          name: key,
-          value: value = dirty_or_db_setting_or_default(key),
+          name: key.to_sym,
+          value: value = dirty_or_db_setting_or_default(key.to_sym),
           default: is_default?(key, value)
         }
       end.sort_by{ |o| o[:name] }
@@ -27,7 +27,7 @@ module Dradis::Plugins
     end
 
     def update_settings(opts = {})
-      opts.select{ |k, v| @default_options.key?(k.to_sym) }.each do |k, v|
+      opts.select{ |k, v| @default_options.key?(k) }.each do |k, v|
         @dirty_options[k.to_sym] = v
       end
       save
