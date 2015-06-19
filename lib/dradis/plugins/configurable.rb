@@ -1,12 +1,6 @@
 module Dradis::Plugins
   module Configurable
-    def self.included(base)
-      # base.parent.extend NamespaceClassMethods
-      base.extend ClassMethods
-
-      # base.class_eval do
-      # end
-    end
+    extend ActiveSupport::Concern
 
     module ClassMethods
       delegate :settings, to: :instance

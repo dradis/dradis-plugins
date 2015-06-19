@@ -1,20 +1,21 @@
 module Dradis
   module Plugins
     module Base
-      def self.included(base)
-        base.extend ClassMethods
-        base.class_eval do
-          # mattr_accessor :plugin_name
+      extend ActiveSupport::Concern
 
-          @features = []
-          @name = 'Use plugin_info(args) with :name to provide a name for this plugin.'
-          Plugins::register(self)
-        end
+      included do
+        extend ClassMethods
+
+        # mattr_accessor :plugin_name
+
+        @features = []
+        @name = 'Use plugin_info(args) with :name to provide a name for this plugin.'
+        Plugins::register(self)
 
         # Extend the engine with other functionality
-        base.send :include, Dradis::Plugins::Configurable
-        base.send :include, Dradis::Plugins::Templates
-        base.send :include, Dradis::Plugins::Thor
+        include Dradis::Plugins::Configurable
+        include Dradis::Plugins::Templates
+        include Dradis::Plugins::Thor
       end
 
       module ClassMethods
