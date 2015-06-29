@@ -4,8 +4,6 @@ module Dradis
       extend ActiveSupport::Concern
 
       included do
-        extend ClassMethods
-
         # mattr_accessor :plugin_name
 
         @features = []
