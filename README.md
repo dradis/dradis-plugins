@@ -6,7 +6,7 @@ This gem contains the base classes needed to manage the plugins in Dradis.
 
 The Dradis 3 gemified plugin Engines need to include Dradis::Plugins::Base which is defined in this class.
 
-Warning, we me end up merging this gem with Dradis::Core!!
+Warning, we may end up merging this gem with Dradis::Core!!
 
 The plugin requires Dradis 3.0 or higher.
 
