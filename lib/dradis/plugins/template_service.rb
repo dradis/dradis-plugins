@@ -64,7 +64,7 @@ module Dradis
       end
 
       # This method returns the current template's source. It caches the
-      # template based on the file's last-modified time and refereshes the
+      # template based on the file's last-modified time and refreshes the
       # cached copy when it detects changes.
       def template_source
         @sources ||= {}
