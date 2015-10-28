@@ -6,8 +6,10 @@ module Dradis
       # ----------------------------------------------------------- Initializer
       #
 
+      # @option plugin [Class] the 'wrapper' module of a plugin, e.g.
+      #     Dradis::Plugins::Nessus
       def initialize(args={})
-        @plugin = args[:plugin]
+        @plugin = args.fetch(:plugin)
       end
 
 
