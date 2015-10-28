@@ -9,7 +9,8 @@ module Dradis
       # @option plugin [Class] the 'wrapper' module of a plugin, e.g.
       #     Dradis::Plugins::Nessus
       def initialize(args={})
-        @plugin = args.fetch(:plugin)
+        self.plugin = args.fetch(:plugin)
+        self.logger = args[:logger]
       end
 
 
