@@ -97,6 +97,8 @@ module Dradis
 
       def create_issue(args={})
         text = args[:text] || "create_issue() invoked by #{plugin} without a :text parameter"
+        # NOTE that ID is the unique issue identifier assigned by the plugin,
+        # and is not to be confused with the Issue#id primary key
         id   = args[:id]   || "create_issue() invoked by #{plugin} without an :id parameter"
 
         # Bail if we already have this issue in the cache
