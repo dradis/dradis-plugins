@@ -123,7 +123,7 @@ module Dradis
           try_rescue_from_length_validation(model: issue, field: :text, text: text, msg: 'Error in create_issue()')
         end
 
-        issue_cache[cache_key] = issue
+        issue_cache.store(cache_key, issue)
       end
 
       def create_evidence(args={})
