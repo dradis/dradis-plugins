@@ -17,7 +17,14 @@ module Dradis
 
           plugin_templates.each do |template|
             destination_file = File.join(destination_dir, File.basename(template))
-            next if File.exist?(destination_file)
+
+            # if we already have a copy of the template...
+            if File.exist?(destination_file) &&
+                # ... and our copy is newer than the plugin's copy ...
+                File.ctime(destination_file) > File.ctime(template)
+              # ... then don't overwrite it:
+              next
+            end
 
             Rails.logger.info{ "Updating templates for #{plugin_name} plugin. Destination: #{destination}" }
             FileUtils.cp(template, destination_file)
