@@ -1,13 +1,11 @@
 module Dradis
   module Plugins
     module Templates
-      def self.included(base)
-        base.extend ClassMethods
-   
-        base.class_eval do
-          # Keep track of any templates the plugin defines
-          paths['dradis/templates'] = 'templates'
-        end
+      extend ActiveSupport::Concern
+
+      included do
+        # Keep track of any templates the plugin defines
+        paths['dradis/templates'] = 'templates'
       end
 
       module ClassMethods

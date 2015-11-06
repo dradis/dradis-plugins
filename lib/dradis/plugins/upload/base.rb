@@ -19,12 +19,10 @@
 #
 
 module Dradis::Plugins::Upload::Base
-  def self.included(base)
-    base.extend ClassMethods
-    base.parent.extend NamespaceClassMethods
+  extend ActiveSupport::Concern
 
-    base.class_eval do
-    end
+  included do
+    parent.extend NamespaceClassMethods
   end
 
   module ClassMethods
