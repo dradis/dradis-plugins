@@ -10,8 +10,7 @@ module Dradis
 
       module ClassMethods
         def copy_templates(args={})
-          destination = args[:to]
-          raise ArgumentError.new(':copy_templates called without a :to parameter') unless destination
+          destination = args.fetch(:to)
 
           destination_dir = File.join(destination, plugin_name.to_s)
           FileUtils.mkdir_p(destination_dir) if plugin_templates.any?
