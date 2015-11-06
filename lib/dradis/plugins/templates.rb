@@ -27,7 +27,7 @@ module Dradis
         def plugin_templates(args={})
           @templates ||= begin
             if paths['dradis/templates'].existent.any?
-              Dir["%s/*" % paths['dradis/templates'].existent]
+              Dir["#{paths['dradis/templates'].existent.first}/*"]
             else
               []
             end
