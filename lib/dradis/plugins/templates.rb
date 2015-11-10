@@ -18,15 +18,12 @@ module Dradis
           plugin_templates.each do |template|
             destination_file = File.join(destination_dir, File.basename(template))
 
-            # if we already have a copy of the template...
-            if File.exist?(destination_file) &&
-                # ... and our copy is newer than the plugin's copy ...
-                File.ctime(destination_file) > File.ctime(template)
-              # ... then don't overwrite it:
-              next
-            end
+            next if skip?(destination_file)
 
-            Rails.logger.info{ "Updating templates for #{plugin_name} plugin. Destination: #{destination}" }
+            Rails.logger.info do
+              "Updating templates for #{plugin_name} plugin. "\
+              "Destination: #{destination}"
+            end
             FileUtils.cp(template, destination_file)
           end
         end
@@ -39,6 +36,20 @@ module Dradis
               []
             end
           end
+        end
+
+        private
+
+        # Normally we want to copy all templates so that the user always has
+        # the latest version.
+        #
+        # However, if it's a '.template' file, the user might have edited their
+        # local copy, and we don't want to override their changes.  So only
+        # copy .template files over if the user has no copy at all (i.e. if
+        # this is the first time they've started Dradis since this template was
+        # added.)
+        def skip?(file_path)
+          File.exist?(file_path) && File.extname(file_path) == ".template"
         end
       end
     end
