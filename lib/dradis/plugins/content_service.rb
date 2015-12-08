@@ -193,9 +193,7 @@ module Dradis
           model.send("#{field}=", msg)
         end
         if model.valid?
-          model.class.observers.disable :revision_observer
           model.save
-          model.class.observers.enable :revision_observer
         end
       end
     end
