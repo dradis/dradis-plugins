@@ -67,7 +67,13 @@ module Dradis::Plugins
     end
 
     def write_to_db(key, value)
-      db_setting = configuration_class.find_or_create_by_name(namespaced_key(key))
+      # FIXME: how ugly is this?
+      # UPGRADE: Rails 4 find_or_create_by_
+      db_setting = if Rails::VERSION::MAJOR == 3
+                      configuration_class.find_or_create_by_name(namespaced_key(key))
+                   else
+                     configuration_class.find_or_create_by(name: namespaced_key(key))
+                   end
       db_setting.update_attribute(:value, value)
     end
 
