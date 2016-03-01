@@ -74,6 +74,7 @@ module Dradis
         end
 
         # FIXME: how ugly is this?
+        # UPGRADE: Rails 4 find_or_create_by_
         if Rails::VERSION::MAJOR == 3
           parent.children.find_or_create_by_label_and_type_id(label, type_id)
         else
@@ -144,9 +145,8 @@ module Dradis
       private
 
       def class_for(model)
-        "Dradis::Core::#{model.to_s.capitalize}".constantize
+        "::#{model.to_s.capitalize}".constantize
       end
-
 
       def default_author
         @default_author ||= "#{plugin::Engine.plugin_name.to_s.humanize} upload plugin"
@@ -165,7 +165,7 @@ module Dradis
       end
 
       def default_parent_node
-        @default_parent_node ||= class_for(:node).find_or_create_by(label: 'plugin.output')
+        @default_parent_node ||= class_for(:node).plugin_parent_node
       end
 
       def issuelib
