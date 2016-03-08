@@ -26,7 +26,7 @@ module Dradis
         end
 
         def plugin_name
-          @plugin_name ||= self.name.split('::')[2].underscore.to_sym
+          @plugin_name ||= self.name.split('::')[-2].underscore.to_sym
         end
 
         def provides(*list)
