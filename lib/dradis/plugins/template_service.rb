@@ -4,7 +4,7 @@ module Dradis
       attr_accessor :logger, :template, :templates_dir
 
       def initialize(args={})
-        @plugin = args[:plugin]
+        @plugin        = args.fetch(:plugin)
         @templates_dir = args[:templates_dir] || default_templates_dir
       end
 
@@ -95,7 +95,10 @@ module Dradis
       # This method returns the default location in which plugins should look
       # for their templates.
       def default_templates_dir
-        @default_templates_dir ||= Rails.root.join('templates', 'plugins', @plugin::meta[:name].to_s)
+        @default_templates_dir ||= begin
+                                     conf_class = Dradis::Plugins::configuration_class.constantize
+                                     File.join(conf_class.paths_templates_plugins, @plugin::meta[:name].to_s)
+                                   end
       end
     end
   end
