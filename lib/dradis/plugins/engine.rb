@@ -18,6 +18,7 @@ module Dradis
       Dradis::Plugins::setup do |config|
         config.base_export_controller_class = 'ProjectScopedController'
         config.configuration_class          = '::Configuration'
+        config.thor_helper_module           = 'Dradis::Plugins::ThorHelper'
       end
     end
   end
