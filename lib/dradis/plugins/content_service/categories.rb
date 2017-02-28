@@ -1,9 +1,9 @@
 module Dradis::Plugins::ContentService
-  module Boards
+  module Categories
     extend ActiveSupport::Concern
 
-    def all_boards
-      Board.where(project_id: project.id)
+    def report_category
+      Category.report
     end
   end
 end
