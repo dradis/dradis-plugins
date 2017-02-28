@@ -14,11 +14,6 @@ module Dradis
           @content_service  = args.fetch(:content_service, default_content_service)
           @template_service = args.fetch(:template_service, default_template_service)
 
-          content_service.logger  = logger
-          content_service.plugin  = plugin
-          template_service.logger = logger
-          template_service.plugin = plugin
-
           post_initialize(args)
         end
 
@@ -32,11 +27,17 @@ module Dradis
 
         private
         def default_content_service
-          @content ||= Dradis::Plugins::ContentService::Base.new
+          @content ||= Dradis::Plugins::ContentService::Base.new(
+            logger: logger,
+            plugin: plugin
+          )
         end
 
         def default_template_service
-          @template ||= Dradis::Plugins::TemplateService.new
+          @template ||= Dradis::Plugins::TemplateService.new(
+            logger: logger,
+            plugin: plugin
+          )
         end
       end # Importer
 
