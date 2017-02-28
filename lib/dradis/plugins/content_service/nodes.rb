@@ -13,6 +13,7 @@ module Dradis::Plugins::ContentService
             "Node::Types::#{tmp_type}".constantize
           else
             default_node_type
+          end
         else
           default_node_type
         end
