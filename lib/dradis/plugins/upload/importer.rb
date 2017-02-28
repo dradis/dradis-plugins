@@ -5,16 +5,19 @@ module Dradis
   module Plugins
     module Upload
       class Importer
-        attr_accessor :content_service, :logger, :template_service
+        attr_accessor :content_service, :logger, :plugin, :template_service
 
         def initialize(args={})
+          @plugin = args.fetch(:plugin)
           @logger = args.fetch(:logger, Rails.logger)
 
-          @content_service = args[:content_service] || default_content_service
-          @template_service = args[:template_service] || default_template_service
+          @content_service  = args.fetch(:content_service, default_content_service)
+          @template_service = args.fetch(:template_service, default_template_service)
 
-          content_service.logger = logger
+          content_service.logger  = logger
+          content_service.plugin  = plugin
           template_service.logger = logger
+          template_service.plugin = plugin
 
           post_initialize(args)
         end
@@ -29,7 +32,7 @@ module Dradis
 
         private
         def default_content_service
-          @content ||= Dradis::Plugins::ContentService.new
+          @content ||= Dradis::Plugins::ContentService::Base.new
         end
 
         def default_template_service

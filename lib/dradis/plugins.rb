@@ -72,7 +72,7 @@ end
 require 'dradis/plugins/engine'
 require 'dradis/plugins/version'
 
-require 'dradis/plugins/content_service'
+require 'dradis/plugins/content_service/base'
 require 'dradis/plugins/template_service'
 
 require 'dradis/plugins/base'
