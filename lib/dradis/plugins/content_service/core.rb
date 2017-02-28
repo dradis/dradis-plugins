@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     included do
-      attr_accessor :logger, :plugin, :project
+      attr_accessor :logger, :plugin
     end
 
     # ----------------------------------------------------------- Initializer
@@ -12,8 +12,8 @@ module Dradis::Plugins::ContentService
     # @option plugin [Class] the 'wrapper' module of a plugin, e.g.
     #     Dradis::Plugins::Nessus
     def initialize(args={})
-      self.plugin = args.fetch(:plugin)
-      self.logger = args.feth(:logger, Rails.logger)
+      @logger  = args.fetch(:logger, Rails.logger)
+      @plugin  = args.fetch(:plugin)
     end
 
     private
