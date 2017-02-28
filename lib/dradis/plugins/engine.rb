@@ -3,6 +3,8 @@ module Dradis
     class Engine < ::Rails::Engine
       isolate_namespace Dradis::Plugins
 
+      config.dradis = ActiveSupport::OrderedOptions.new
+
       # initializer 'frontend.append_migrations' do |app|
       #   unless app.root.to_s == root.to_s
       #     config.paths["db/migrate"].expanded.each do |path|
