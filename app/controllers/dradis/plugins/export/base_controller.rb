@@ -1,7 +1,7 @@
 module Dradis
   module Plugins
     module Export
-      class BaseController < Dradis::Plugins::base_export_controller_class.to_s.constantize
+      class BaseController < Rails.application.config.dradis.base_export_controller_class_name.to_s.constantize
 
         protected
 

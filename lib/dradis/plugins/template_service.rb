@@ -96,9 +96,8 @@ module Dradis
       # for their templates.
       def default_templates_dir
         @default_templates_dir ||= begin
-                                     conf_class = Dradis::Plugins::configuration_class.constantize
-                                     File.join(conf_class.paths_templates_plugins, @plugin::meta[:name].to_s)
-                                   end
+          File.join(Configuration.paths_templates_plugins, @plugin::meta[:name].to_s)
+        end
       end
     end
   end
