@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     included do
-      attr_accessor :logger, :plugin
+      attr_accessor :logger, :plugin, :project
     end
 
     # ----------------------------------------------------------- Initializer
@@ -14,6 +14,7 @@ module Dradis::Plugins::ContentService
     def initialize(args={})
       @logger  = args.fetch(:logger, Rails.logger)
       @plugin  = args.fetch(:plugin)
+      @project = args.fetch(:project)
     end
 
     private

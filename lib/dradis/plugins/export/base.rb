@@ -5,13 +5,17 @@ module Dradis
   module Plugins
     module Export
       class Base
-        attr_accessor :content_service, :logger, :plugin
+        attr_accessor :content_service, :logger, :options, :plugin, :project
 
         def initialize(args={})
+          # Save everything just in case the implementing class needs any of it.
+          @options = args
 
           # Can't use :fetch for :plugin or :default_plugin gets evaluated
-          @plugin          = args[:plugin] || default_plugin
-          @logger          = args.fetch(:logger, Rails.logger)
+          @logger  = args.fetch(:logger, Rails.logger)
+          @plugin  = args[:plugin] || default_plugin
+          @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
+
           @content_service = args.fetch(:content_service, default_content_service)
 
           post_initialize(args)
@@ -29,7 +33,8 @@ module Dradis
         def default_content_service
           @content ||= Dradis::Plugins::ContentService::Base.new(
             logger: logger,
-            plugin: plugin
+            plugin: plugin,
+            project: project
           )
         end
 
