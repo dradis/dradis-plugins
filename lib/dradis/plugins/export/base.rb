@@ -38,7 +38,7 @@ module Dradis
           )
         end
 
-        # This assumes the plugin's Export class is directly nexted into the
+        # This assumes the plugin's Exporter class is directly nexted into the
         # plugin's namespace (e.g. Dradis::Plugins::HtmlExport::Exporter)
         def default_plugin
           plugin_module   = self.class.name.deconstantize
