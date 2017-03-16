@@ -1,13 +1,5 @@
 module Dradis
   module Plugins
-    mattr_accessor :configuration_class
-    mattr_accessor :base_export_controller_class
-    mattr_accessor :thor_helper_module
-
-    def self.setup(&block)
-      yield self
-    end
-
     class << self
       @@extensions = []
 
@@ -72,7 +64,7 @@ end
 require 'dradis/plugins/engine'
 require 'dradis/plugins/version'
 
-require 'dradis/plugins/content_service'
+require 'dradis/plugins/content_service/base'
 require 'dradis/plugins/template_service'
 
 require 'dradis/plugins/base'

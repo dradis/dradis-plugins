@@ -5,14 +5,18 @@ module Dradis
   module Plugins
     module Export
       class Base
-        attr_accessor :content_service, :logger
+        attr_accessor :content_service, :logger, :options, :plugin, :project
 
         def initialize(args={})
-          @logger = args.fetch(:logger, Rails.logger)
+          # Save everything just in case the implementing class needs any of it.
+          @options = args
 
-          @content_service = args[:content_service] || default_content_service
+          # Can't use :fetch for :plugin or :default_plugin gets evaluated
+          @logger  = args.fetch(:logger, Rails.logger)
+          @plugin  = args[:plugin] || default_plugin
+          @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
 
-          content_service.logger = logger
+          @content_service = args.fetch(:content_service, default_content_service)
 
           post_initialize(args)
         end
@@ -27,7 +31,24 @@ module Dradis
 
         private
         def default_content_service
-          @content ||= Dradis::Plugins::ContentService.new
+          @content ||= Dradis::Plugins::ContentService::Base.new(
+            logger: logger,
+            plugin: plugin,
+            project: project
+          )
+        end
+
+        # This assumes the plugin's Exporter class is directly nexted into the
+        # plugin's namespace (e.g. Dradis::Plugins::HtmlExport::Exporter)
+        def default_plugin
+          plugin_module   = self.class.name.deconstantize
+          plugin_constant = plugin_module.constantize
+          plugin_engine   = plugin_constant::Engine
+          if Dradis::Plugins.registered?(plugin_engine)
+            plugin_constant
+          else
+            raise "You need to pass a :plugin value to your Exporter or define it under your plugin's root namespace."
+          end
         end
 
       end # Base

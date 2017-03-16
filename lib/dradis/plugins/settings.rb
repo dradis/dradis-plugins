@@ -36,7 +36,7 @@ module Dradis::Plugins
     def reset_defaults!
       @dirty_options = {}
       @default_options.each do |key, value|
-        configuration_class.where(name: namespaced_key(key)).each(&:destroy)
+        Configuration.where(name: namespaced_key(key)).each(&:destroy)
       end
     end
 
@@ -60,26 +60,14 @@ module Dradis::Plugins
     end
     # --------------------------------------------------- /Method missing magic
 
-    # This allows us to use the same code in Community and Pro and overwrite
-    # the name of the class in an initializer.
-    def configuration_class
-      @klass ||= Dradis::Plugins::configuration_class.to_s.constantize
-    end
-
     def write_to_db(key, value)
-      # FIXME: how ugly is this?
-      # UPGRADE: Rails 4 find_or_create_by_
-      db_setting = if Rails::VERSION::MAJOR == 3
-                      configuration_class.find_or_create_by_name(namespaced_key(key))
-                   else
-                     configuration_class.find_or_create_by(name: namespaced_key(key))
-                   end
+      db_setting = Configuration.find_or_create_by(name: namespaced_key(key))
       db_setting.update_attribute(:value, value)
     end
 
 
     def db_setting(key)
-      configuration_class.where(name: namespaced_key(key)).first.value rescue nil
+      Configuration.where(name: namespaced_key(key)).first.value rescue nil
     end
 
     # This method looks up in the configuration repository DB to see if the
@@ -88,7 +76,7 @@ module Dradis::Plugins
     def dirty_or_db_setting_or_default(key)
       if @dirty_options.key?(key)
         @dirty_options[key]
-      elsif configuration_class.exists?(name: namespaced_key(key))
+      elsif Configuration.exists?(name: namespaced_key(key))
         db_setting(key)
       else
         @default_options[key]
