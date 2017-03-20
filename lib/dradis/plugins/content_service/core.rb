@@ -14,7 +14,7 @@ module Dradis::Plugins::ContentService
     def initialize(args={})
       @logger  = args.fetch(:logger, Rails.logger)
       @plugin  = args.fetch(:plugin)
-      @project = args.fetch(:project)
+      @project = args[:project]
     end
 
     private
