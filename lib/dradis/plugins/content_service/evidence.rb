@@ -5,7 +5,7 @@ module Dradis::Plugins::ContentService
     def create_evidence(args={})
       content = args.fetch(:content, default_evidence_content)
       node    = args.fetch(:node, default_node_parent)
-      issue   = args.fetch(:issue, default_evidence_issue)
+      issue   = args[:issue] || default_evidence_issue
 
       evidence = node.evidence.new(issue_id: issue.id, content: content)
 
