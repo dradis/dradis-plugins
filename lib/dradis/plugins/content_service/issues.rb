@@ -19,8 +19,10 @@ module Dradis::Plugins::ContentService
       return issue_cache[cache_key] if issue_cache.key?(cache_key)
 
       # we inject the source Plugin and unique ID into the issue's text
-      text << "\n\n#[plugin]#\n#{uuid[0]}\n"
-      text << "\n\n#[plugin_id]#\n#{uuid[1]}\n"
+      plugin_details =
+        "\n\n#[plugin]#\n#{uuid[0]}\n" \
+        "\n\n#[plugin_id]#\n#{uuid[1]}\n"
+      text << plugin_details
 
       issue = Issue.new(text: text) do |i|
         i.author   = default_author
@@ -37,6 +39,10 @@ module Dradis::Plugins::ContentService
           text: text,
           msg: 'Error in create_issue()'
         )
+
+        # Re-inject the plugin details
+        issue.text[-(plugin_details.length)..-1] = plugin_details
+        issue.save
       end
 
       issue_cache.store(cache_key, issue)

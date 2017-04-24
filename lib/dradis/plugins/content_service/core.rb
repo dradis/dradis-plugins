@@ -40,7 +40,7 @@ module Dradis::Plugins::ContentService
       else
         # bail
         msg = "#[Title]#\n#{msg}\n\n"
-        msg << "#[Description]#\nbc. #{issue.errors.inspect}\n\n"
+        msg << "#[Description]#\nbc. #{model.errors.inspect}\n\n"
         model.send("#{field}=", msg)
       end
       if model.valid?
