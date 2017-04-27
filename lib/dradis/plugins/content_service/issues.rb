@@ -37,12 +37,9 @@ module Dradis::Plugins::ContentService
           model: issue,
           field: :text,
           text: text,
-          msg: 'Error in create_issue()'
+          msg: 'Error in create_issue()',
+          tail: plugin_details
         )
-
-        # Re-inject the plugin details
-        issue.text[-(plugin_details.length)..-1] = plugin_details
-        issue.save
       end
 
       issue_cache.store(cache_key, issue)
