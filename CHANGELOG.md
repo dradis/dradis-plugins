@@ -1,4 +1,9 @@
-## Dradis Framework 3.6 (March XX, 2017) ##
+## Dradis Framework 3.7 (XXX, 2017) ##
+
+*   Don't lose :plugin and :plugin_id from ContentService#create_issue due to
+    excessive input length.
+
+## Dradis Framework 3.6 (April 6, 2017) ##
 
 *   Split the ContentService into multiple modules.
 

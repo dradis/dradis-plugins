@@ -28,6 +28,7 @@ module Dradis::Plugins::ContentService
       field = args[:field]
       text  = args[:text]
       msg   = args[:msg]
+      tail  = "..." + args[:tail].to_s
 
       logger.error{ "Trying to rescue from a :length error" }
 
@@ -36,11 +37,11 @@ module Dradis::Plugins::ContentService
         msg = "#[Title]#\nTruncation warning!\n\n"
         msg << "#[Error]#\np(alert alert-error). The plugin tried to store content that was too big for the DB. Review the source to ensure no important data was lost.\n\n"
         msg << text
-        model.send("#{field}=", msg.truncate(65300))
+        model.send("#{field}=", msg.truncate(65300, omission: tail))
       else
         # bail
         msg = "#[Title]#\n#{msg}\n\n"
-        msg << "#[Description]#\nbc. #{issue.errors.inspect}\n\n"
+        msg << "#[Description]#\nbc. #{model.errors.inspect}\n\n"
         model.send("#{field}=", msg)
       end
       if model.valid?
