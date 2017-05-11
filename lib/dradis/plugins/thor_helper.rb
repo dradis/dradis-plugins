@@ -5,7 +5,7 @@ module Dradis
       attr_accessor :task_options, :logger
 
       def detect_and_set_project_scope
-        ;
+        task_options[:project_id] = ENV['PROJECT_ID'].to_i if ENV['PROJECT_ID']
       end
 
       def task_options
