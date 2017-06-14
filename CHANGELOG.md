@@ -1,5 +1,8 @@
 ## Dradis Framework 3.7 (XXX, 2017) ##
 
+*   Add ContentService#all_properties method to access the current project's
+    properties.
+
 *   Don't lose :plugin and :plugin_id from ContentService#create_issue due to
     excessive input length.
 
