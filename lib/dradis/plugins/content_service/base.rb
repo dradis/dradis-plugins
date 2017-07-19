@@ -5,6 +5,7 @@ require 'dradis/plugins/content_service/evidence'
 require 'dradis/plugins/content_service/issues'
 require 'dradis/plugins/content_service/nodes'
 require 'dradis/plugins/content_service/notes'
+require 'dradis/plugins/content_service/properties'
 
 module Dradis::Plugins::ContentService
   class Base
@@ -16,6 +17,7 @@ module Dradis::Plugins::ContentService
     include Issues
     include Nodes
     include Notes
+    include Properties if defined?(Dradis::Pro)
 
      ActiveSupport.run_load_hooks(:content_service, self)
   end
