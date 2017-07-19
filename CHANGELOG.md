@@ -1,11 +1,7 @@
-## Dradis Framework 3.8 (XXX, 2017) ##
-
-* ContentService#all_properties now pulls the Report Content document properties
-
-## Dradis Framework 3.7 (XXX, 2017) ##
+## Dradis Framework 3.7 (July, 2017) ##
 
 *   Add ContentService#all_properties method to access the current project's
-    properties.
+    document properties.
 
 *   Don't lose :plugin and :plugin_id from ContentService#create_issue due to
     excessive input length.
