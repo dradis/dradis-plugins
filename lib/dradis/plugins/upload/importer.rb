@@ -7,7 +7,7 @@ module Dradis
       class Importer
         attr_accessor(
           :content_service,
-          :current_user_id,
+          :default_user_id,
           :logger,
           :options,
           :plugin,
