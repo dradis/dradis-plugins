@@ -12,14 +12,14 @@ module Dradis::Plugins::ContentService
   class Base
     include Core
 
-    include Boards     if defined?(Dradis::Pro)
+    include Boards        if defined?(Dradis::Pro)
     include Categories
     include ContentBlocks if defined?(Dradis::Pro)
     include Evidence
     include Issues
     include Nodes
     include Notes
-    include Properties if defined?(Dradis::Pro)
+    include Properties    if defined?(Dradis::Pro)
 
      ActiveSupport.run_load_hooks(:content_service, self)
   end

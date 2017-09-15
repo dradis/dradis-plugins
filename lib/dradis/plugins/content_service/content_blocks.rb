@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_content_blocks
-      @project.content_blocks
+      ContentBlock.where(project_id: project.id)
     end
   end
 end
