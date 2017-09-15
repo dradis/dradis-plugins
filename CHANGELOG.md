@@ -1,3 +1,8 @@
+## Dradis Framework 3.8 (XXX, 2017) ##
+
+*   Add ContentService#all_content_blocks method to access the current project's
+    content blocks.
+
 ## Dradis Framework 3.7 (July, 2017) ##
 
 *   Add ContentService#all_properties method to access the current project's
