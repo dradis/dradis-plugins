@@ -74,7 +74,7 @@ module Dradis::Plugins::ContentService
     #
     # Returns and Array with a unique collection of Nodes.
     def nodes_from_properties
-      Node.user_nodes.where('properties IS NOT NULL AND properties != \'{}\'')
+      Node.user_nodes.where("type_id <> #{Node::Types::CONTENTLIB} AND properties IS NOT NULL AND properties != '{}'")
     end
   end
 end
