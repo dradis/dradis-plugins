@@ -5,7 +5,15 @@ module Dradis
   module Plugins
     module Upload
       class Importer
-        attr_accessor :content_service, :logger, :options, :plugin, :project, :template_service
+        attr_accessor(
+          :content_service,
+          :default_user_id,
+          :logger,
+          :options,
+          :plugin,
+          :project,
+          :template_service
+        )
 
         def initialize(args={})
           @options = args
@@ -13,6 +21,7 @@ module Dradis
           @logger  = args.fetch(:logger, Rails.logger)
           @plugin  = args[:plugin] || default_plugin
           @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
+          @default_user_id = args[:default_user_id] || -1
 
           @content_service  = args.fetch(:content_service, default_content_service)
           @template_service = args.fetch(:template_service, default_template_service)
