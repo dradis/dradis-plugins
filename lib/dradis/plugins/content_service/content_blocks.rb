@@ -7,13 +7,13 @@ module Dradis::Plugins::ContentService
     end
 
     def create_content_block(args={})
-      name    = args.fetch(:name, default_content_block_name)
-      user_id = args.fetch(:user_id)
-      content = args.fetch(:content, default_content_block_content)
+      block_group    = args.fetch(:block_group, default_content_block_group)
+      content        = args.fetch(:content, default_content_block_content)
+      user_id        = args.fetch(:user_id)
 
       content_block = ContentBlock.new(
         content: content,
-        name: name,
+        block_group: block_group,
         project_id: project.id,
         user_id: user_id
       )
@@ -37,8 +37,8 @@ module Dradis::Plugins::ContentService
       "create_content_block() invoked by #{plugin} without a :content parameter"
     end
 
-    def default_content_block_name
-      "create_content_block() invoked by #{plugin} without a :name parameter"
+    def default_content_block_group
+      "create_content_block() invoked by #{plugin} without a :block_group parameter"
     end
   end
 end
