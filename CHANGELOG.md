@@ -1,3 +1,7 @@
+## Dradis Framework 3.10 (January, 2018) ##
+
+*  Default title sorting for content blocks
+
 ## Dradis Framework 3.9 (January, 2018) ##
 
 *  No changes
