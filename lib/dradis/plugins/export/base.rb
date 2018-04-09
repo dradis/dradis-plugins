@@ -1,5 +1,4 @@
 # This module contains basic Export plugin functions.
-#
 
 module Dradis
   module Plugins

@@ -6,7 +6,7 @@ module Dradis
       # Returns an array of modules representing currently registered Dradis Plugins / engines
       #
       # Example:
-      #   Dradis::Core::Plugins.list  =>  [Dradis::Core, Dradis::Frontend]
+      #   Dradis::Plugins.list  =>  [Dradis::Core, Dradis::Frontend]
       def list
         @@extensions
       end
@@ -23,7 +23,7 @@ module Dradis
       # Register a plugin with the framework
       #
       # Example:
-      #   Dradis::Core::Plugins.register(Dradis::Core)
+      #   Dradis::Plugins.register(Dradis::Core)
       def register(const)
         return if registered?(const)
 
@@ -35,7 +35,7 @@ module Dradis
       # Unregister a plugin from the framework
       #
       # Example:
-      #   Dradis::Core::Plugins.unregister(Dradis::Core)
+      #   Dradis::Plugins.unregister(Dradis::Core)
       def unregister(const)
         @@extensions.delete(const)
       end
@@ -43,7 +43,7 @@ module Dradis
       # Returns true if a plugin is currently registered with the framework
       #
       # Example:
-      #   Dradis::Core::Plugins.registered?(Dradis::Core)
+      #   Dradis::Plugins.registered?(Dradis::Core)
       def registered?(const)
         @@extensions.include?(const)
       end
