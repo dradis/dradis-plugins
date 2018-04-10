@@ -71,6 +71,7 @@ require 'dradis/plugins/base'
 require 'dradis/plugins/export'
 require 'dradis/plugins/import'
 require 'dradis/plugins/upload'
+require 'dradis/plugins/sync'
 
 # Common functionality
 require 'dradis/plugins/configurable'
