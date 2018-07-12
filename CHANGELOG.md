@@ -1,6 +1,7 @@
-## Dradis Framework 3.10 (January, 2018) ##
+## Dradis Framework 3.10 (###) ##
 
 *  Default title sorting for content blocks
+*  Avoid requiring the caller to use `set_project_scope`
 
 ## Dradis Framework 3.9 (January, 2018) ##
 
