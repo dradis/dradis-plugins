@@ -44,7 +44,7 @@ module Dradis::Plugins::ContentService
     end
 
     def default_node_parent
-      @default_parent_node ||= Node.plugin_parent_node
+      @default_parent_node ||= project.plugin_parent_node
     end
 
     def default_node_type
@@ -74,7 +74,7 @@ module Dradis::Plugins::ContentService
     #
     # Returns and Array with a unique collection of Nodes.
     def nodes_from_properties
-      Node.user_nodes.where('properties IS NOT NULL AND properties != \'{}\'')
+      project.nodes.user_nodes.where('properties IS NOT NULL AND properties != \'{}\'')
     end
   end
 end
