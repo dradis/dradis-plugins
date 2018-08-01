@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_issues
-      Issue.where(category_id: default_issue_category.id)
+      project.issues.where(category_id: default_issue_category.id)
     end
 
     def create_issue(args={})
@@ -26,7 +26,7 @@ module Dradis::Plugins::ContentService
 
       issue = Issue.new(text: text) do |i|
         i.author   = default_author
-        i.node     = issue_library
+        i.node     = project.issue_library
         i.category = default_issue_category
       end
 
@@ -90,10 +90,5 @@ module Dradis::Plugins::ContentService
     def default_issue_text
       "create_issue() invoked by #{plugin} without a :text parameter"
     end
-
-    def issue_library
-      @issue_library ||= Node.issue_library
-    end
-
   end
 end

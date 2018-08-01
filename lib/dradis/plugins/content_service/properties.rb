@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_properties
-      Node.content_library.properties
+      project.content_library.properties
     end
   end
 end

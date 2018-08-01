@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_notes
-      Note.where(category: Category.report)
+      project.notes.where(category: Category.report)
     end
 
     def create_note(args={})
