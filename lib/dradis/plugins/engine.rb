@@ -7,7 +7,7 @@ module Dradis
 
       initializer "dradis-plugins.set_configs" do |app|
         options = app.config.dradis
-        options.base_export_controller_class_name ||= 'ProjectScopedController'
+        options.base_export_controller_class_name ||= 'AuthenticatedController'
         options.thor_helper_module ||= Dradis::Plugins::ThorHelper
       end
     end
