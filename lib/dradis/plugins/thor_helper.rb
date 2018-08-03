@@ -5,7 +5,7 @@ module Dradis
       attr_accessor :task_options, :logger
 
       def detect_and_set_project_scope
-        ;
+        task_options[:project_id] = Project.new.id
       end
 
       def task_options
