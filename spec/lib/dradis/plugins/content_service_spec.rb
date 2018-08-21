@@ -61,24 +61,4 @@ describe Dradis::Plugins::ContentService::Base do
       end
     end
   end
-
-  describe 'ContentBlocks' do
-    it 'returns content blocks ordered by title' do
-      cb1 = create(
-        :content_block,
-        content: "#[Title]#\r\nB\r\n#[Description]#\r\nContent Block B",
-        project: project
-      )
-      cb2 = create(
-        :content_block,
-        content: "#[Title]#\r\nA\r\n#[Description]#\r\nContent Block A",
-        project: project
-      )
-
-      expect(cb1.id).to be < cb2.id
-      content_blocks = service.all_content_blocks
-      expect(content_blocks.class).not_to be_an(Array)
-      expect(content_blocks.first.id).to eq cb2.id
-    end
-  end
 end
