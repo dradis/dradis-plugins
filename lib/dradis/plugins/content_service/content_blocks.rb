@@ -3,7 +3,10 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_content_blocks
-      ContentBlock.where(project_id: project.id).order(:block_group)
+      ordered = ContentBlock.where(project_id: project.id).sort_by do |cb|
+        cb.title.downcase
+      end.map(&:id)
+      ContentBlock.where(id: ordered).order("field(id, #{ordered.join(',')})")
     end
 
     def create_content_block(args={})
