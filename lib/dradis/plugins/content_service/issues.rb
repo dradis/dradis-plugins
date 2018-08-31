@@ -64,7 +64,7 @@ module Dradis::Plugins::ContentService
     # the issue library cache has been initialized.
     def issue_cache
       @issue_cache ||= begin
-        issues_map = Issue.where(category_id: default_issue_category.id).map do |issue|
+        issues_map = all_issues.map do |issue|
           cache_key = [
             issue.fields['plugin'],
             issue.fields['plugin_id']

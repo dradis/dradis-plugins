@@ -1,5 +1,7 @@
-## Dradis Framework 3.10 (###) ##
+## Dradis Framework 3.10 (August, 2018) ##
 
+*  Add default project to task options
+*  Use AuthenticatedController as export base
 *  Default title sorting for content blocks
 *  Avoid requiring the caller to use `set_project_scope`
 
