@@ -45,6 +45,49 @@ module Dradis::Plugins::ContentService
       issue_cache.store(cache_key, issue)
     end
 
+    def create_many_issues(issues)
+      new_issues = []
+
+      issues.each do |issue|
+        issue[:text] = default_issue_text if issue[:text].blank?
+        # NOTE that ID is the unique issue identifier assigned by the plugin,
+        # and is not to be confused with the Issue#id primary key
+        issue[:id] = default_issue_id if issue[:id].blank?
+
+        uuid      = [plugin::Engine::plugin_name, issue[:id]]
+        cache_key = uuid.join('-')
+        next if issue_cache.key?(cache_key)
+
+        # skip dups
+        next if new_issues.map { |i| i[:id] }.include?(issue[:id])
+
+        # we inject the source Plugin and unique ID into the issue's text
+        plugin_details =
+          "\n\n#[plugin]#\n#{uuid[0]}\n" \
+          "\n\n#[plugin_id]#\n#{uuid[1]}\n"
+        issue[:text] << plugin_details
+
+        # TODO: check issue text length
+
+        new_issues << issue
+      end
+
+      return false if new_issues.empty?
+
+      node_id = project.issue_library.id
+      time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
+      values = new_issues.map{ |issue| "('#{default_author}', #{default_issue_category.id}, '#{time}', #{node_id}, #{ActiveRecord::Base.connection.quote(issue[:text])}, '#{time}')" }.join(',')
+      sql = "INSERT INTO notes (author, category_id, created_at, node_id, text, updated_at) VALUES #{values}"
+      ActiveRecord::Base.connection.execute(sql)
+
+      all_issues.each do |issue|
+        issue_plugin_id = issue.fields['plugin_id']
+        uuid      = [plugin::Engine::plugin_name, issue_plugin_id]
+        cache_key = uuid.join('-')
+        issue_cache.store(cache_key, issue)
+      end
+    end
+
     # Create a hash with all issues where the keys correspond to the field passed
     # as an argument.
     #

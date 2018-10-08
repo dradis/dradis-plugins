@@ -31,6 +31,23 @@ module Dradis::Plugins::ContentService
       note
     end
 
+    def create_many_notes(notes)
+      notes.each do |note|
+        note[:category_id] ||= default_note_category.id
+        note[:node_label] ||= default_node_parent.label
+        note[:node_id] = project.nodes.find_by_label(note[:node_label]).id
+        note[:text] ||= default_note_text
+      end
+
+      # TODO : check text length
+
+      time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
+      values = notes.map{ |note| "('#{default_author}', #{note[:category_id]}, '#{time}', #{note[:node_id]}, #{ActiveRecord::Base.connection.quote(note[:text])}, '#{time}')" }.join(',')
+      sql = "INSERT INTO notes (author, category_id, created_at, node_id, text, updated_at) VALUES #{values}"
+
+      ActiveRecord::Base.connection.execute(sql)
+    end
+
     private
     def default_note_category
       @default_note_category ||= Category.default

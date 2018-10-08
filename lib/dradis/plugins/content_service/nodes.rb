@@ -21,24 +21,47 @@ module Dradis::Plugins::ContentService
       label  = args[:label]  || default_node_label
       parent = args[:parent] || default_node_parent
 
-      type_id = begin
-        if args[:type]
-          tmp_type = args[:type].to_s.upcase
-          if Node::Types::const_defined?(tmp_type)
-            "Node::Types::#{tmp_type}".constantize
-          else
-            default_node_type
-          end
-        else
-          default_node_type
-        end
-      end
+      type_id = node_type(args[:type])
 
       parent.children.find_or_create_by(
         label: label,
         type_id: type_id,
         project_id: parent.project_id
       )
+    end
+
+    def create_many_nodes(nodes)
+      nodes.each do |node|
+        node[:label] = default_node_label if node[:label].blank?
+        # node[:parent] = default_node_parent
+
+        node[:type] = node_type(node[:type])
+      end
+
+      time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
+      values = nodes.map{ |node| "('#{time}', #{ActiveRecord::Base.connection.quote(node[:label])}, #{project.id}, #{node[:type]}, '#{time}')" }.join(',')
+      sql = "INSERT INTO nodes (created_at, label, project_id, type_id, updated_at) VALUES #{values}"
+
+      ActiveRecord::Base.connection.execute(sql)
+
+      # FIXME: saving nodes an properties, still one node at a time
+      nodes.each do |node|
+        saved_node = project.nodes.find_by_label(node[:label])
+
+        if node.key?(:properties) && !node[:properties].empty?
+          node[:properties].each do |key, value|
+            saved_node.set_property(key, value)
+          end
+        end
+
+        if node.key?(:services) && !node[:services].empty?
+          node[:services].each do |service|
+            saved_node.set_service(service)
+          end
+        end
+
+        saved_node.save
+      end
     end
 
     private
@@ -79,6 +102,21 @@ module Dradis::Plugins::ContentService
     # Returns and Array with a unique collection of Nodes.
     def nodes_from_properties
       project.nodes.user_nodes.where('properties IS NOT NULL AND properties != \'{}\'')
+    end
+
+    def node_type(type)
+      begin
+        if type
+          tmp_type = type.to_s.upcase
+          if Node::Types::const_defined?(tmp_type)
+            "Node::Types::#{tmp_type}".constantize
+          else
+            default_node_type
+          end
+        else
+          default_node_type
+        end
+      end
     end
   end
 end
