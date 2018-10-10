@@ -40,7 +40,7 @@ module Dradis::Plugins::ContentService
             issue.to_issue.id
           end
 
-        # TODO: validate content length
+        evidence[:content] = truncate_text(text: evidence[:content])
       end
 
       return false if evidence.empty?

@@ -37,9 +37,9 @@ module Dradis::Plugins::ContentService
         note[:node_label] ||= default_node_parent.label
         note[:node_id] = project.nodes.find_by_label(note[:node_label]).id
         note[:text] ||= default_note_text
-      end
 
-      # TODO : check text length
+        note[:text] = truncate_text(text: note[:text])
+      end
 
       time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
       values = notes.map{ |note| "('#{default_author}', #{note[:category_id]}, '#{time}', #{note[:node_id]}, #{ActiveRecord::Base.connection.quote(note[:text])}, '#{time}')" }.join(',')

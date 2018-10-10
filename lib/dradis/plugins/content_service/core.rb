@@ -34,10 +34,7 @@ module Dradis::Plugins::ContentService
 
       if model.errors[field]
         # the plugin tried to store too much information
-        msg = "#[Title]#\nTruncation warning!\n\n"
-        msg << "#[Error]#\np(alert alert-error). The plugin tried to store content that was too big for the DB. Review the source to ensure no important data was lost.\n\n"
-        msg << text
-        model.send("#{field}=", msg.truncate(65300, omission: tail))
+        model.send("#{field}=", truncate_text(text: text, tail: tail))
       else
         # bail
         msg = "#[Title]#\n#{msg}\n\n"
@@ -49,5 +46,13 @@ module Dradis::Plugins::ContentService
       end
     end
 
+    def truncate_text(text:, tail: "...")
+      return text if text.length <= 65300
+
+      msg = "#[Title]#\nTruncation warning!\n\n"
+      msg << "#[Error]#\np(alert alert-error). The plugin tried to store content that was too big for the DB. Review the source to ensure no important data was lost.\n\n"
+      msg << text
+      msg.truncate(65300, omission: tail)
+    end
   end
 end

@@ -67,7 +67,7 @@ module Dradis::Plugins::ContentService
           "\n\n#[plugin_id]#\n#{uuid[1]}\n"
         issue[:text] << plugin_details
 
-        # TODO: check issue text length
+        issue[:text] = truncate_text(text: text, tail: '...' + plugin_details)
 
         new_issues << issue
       end
