@@ -32,19 +32,21 @@ module Dradis::Plugins::ContentService
 
     def create_many_nodes(nodes)
       nodes.each do |node|
-        node[:label] = default_node_label if node[:label].blank?
-        # node[:parent] = default_node_parent
+        node[:label]     = default_node_label if node[:label].blank?
+        node[:parent_id] = default_node_parent.id
 
         node[:type] = node_type(node[:type])
       end
 
       time = Time.now.strftime('%Y-%m-%d %H:%M:%S')
-      values = nodes.map{ |node| "('#{time}', #{ActiveRecord::Base.connection.quote(node[:label])}, #{project.id}, #{node[:type]}, '#{time}')" }.join(',')
-      sql = "INSERT INTO nodes (created_at, label, project_id, type_id, updated_at) VALUES #{values}"
+      values = nodes.map{ |node| "('#{time}', #{ActiveRecord::Base.connection.quote(node[:label])}, #{node[:parent_id]}, 0, #{project.id}, #{node[:type]}, '#{time}')" }.join(',')
+      sql = "INSERT INTO nodes (created_at, label, parent_id, position, project_id, type_id, updated_at) VALUES #{values}"
 
       ActiveRecord::Base.connection.execute(sql)
 
-      # FIXME: saving nodes an properties, still one node at a time
+      Node.reset_counters(default_node_parent.id, :children_count)
+
+      # FIXME: saving nodes properties and services still one node at a time
       nodes.each do |node|
         saved_node = project.nodes.find_by_label(node[:label])
 
