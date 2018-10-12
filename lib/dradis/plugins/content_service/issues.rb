@@ -67,7 +67,7 @@ module Dradis::Plugins::ContentService
           "\n\n#[plugin_id]#\n#{uuid[1]}\n"
         issue[:text] << plugin_details
 
-        issue[:text] = truncate_text(text: text, tail: '...' + plugin_details)
+        issue[:text] = truncate_text(text: issue[:text], tail: '...' + plugin_details)
 
         new_issues << issue
       end
@@ -81,7 +81,10 @@ module Dradis::Plugins::ContentService
       ActiveRecord::Base.connection.execute(sql)
 
       all_issues.each do |issue|
+        issue_plugin = issue.fields['plugin']
         issue_plugin_id = issue.fields['plugin_id']
+        next if issue_plugin.blank? || issue_plugin.to_sym != plugin::Engine::plugin_name
+
         uuid      = [plugin::Engine::plugin_name, issue_plugin_id]
         cache_key = uuid.join('-')
         issue_cache.store(cache_key, issue)
