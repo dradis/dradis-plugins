@@ -34,14 +34,13 @@ module Dradis::Plugins::ContentService
         end
       end
 
-      node_params = {
+      new_node = parent.children.find_or_initialize_by(
         label: label,
         type_id: type_id
-      }
-
-      node_params[:project_id] = parent.project.id if parent.respond_to?(:project_id)
-
-      parent.children.find_or_create_by(node_params)
+      )
+      new_node.project = parent.project
+      new_node.save
+      new_node
     end
 
     private
