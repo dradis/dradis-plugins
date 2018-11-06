@@ -1,6 +1,6 @@
 ## Dradis Framework 3.10.1 (November, 2018) ##
 
-*  Do not use `node.project_id` if the column does not exist
+*  Do not use `Node#project_id`
 
 ## Dradis Framework 3.10 (August, 2018) ##
 
