@@ -34,11 +34,13 @@ module Dradis::Plugins::ContentService
         end
       end
 
-      parent.children.find_or_create_by(
+      new_node = parent.children.find_or_initialize_by(
         label: label,
-        type_id: type_id,
-        project_id: parent.project_id
+        type_id: type_id
       )
+      new_node.project = parent.project
+      new_node.save
+      new_node
     end
 
     private

@@ -1,3 +1,7 @@
+## Dradis Framework 3.10.1 (November, 2018) ##
+
+*  Do not use `Node#project_id`
+
 ## Dradis Framework 3.10 (August, 2018) ##
 
 *  Add default project to task options
