@@ -1,3 +1,7 @@
+## Dradis Framework 3.11 (November, 2018) ##
+
+*  No changes.
+
 ## Dradis Framework 3.10.1 (November, 2018) ##
 
 *  Do not use `Node#project_id`
