@@ -38,6 +38,8 @@ module Dradis::Plugins::ContentService
         label: label,
         type_id: type_id
       )
+      # `Node#project_id` method does not exist in CE. We set the project for
+      # `new_node` once it is initialized using `Node#project=`
       new_node.project = parent.project
       new_node.save
       new_node
