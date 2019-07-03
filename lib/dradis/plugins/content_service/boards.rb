@@ -7,8 +7,9 @@ module Dradis::Plugins::ContentService
     end
 
     def create_board(args={})
-      name = args.fetch(:name, default_board_name)
-      Board.create(name: name, project_id: project.id)
+      name    = args.fetch(:name, default_board_name)
+      node_id = args.fetch(:node_id, project.methodology_library.id)
+      Board.create(name: name, project_id: project.id, node_id: node_id)
     end
 
     private
