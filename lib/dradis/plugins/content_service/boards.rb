@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_boards
-      Board.where(project_id: project.id)
+      project.methodology_library.boards
     end
 
     def create_board(args={})
