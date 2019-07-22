@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+# To run, execute from Dradis main app folder:
+#   bin/rspec [dradis-plugins path]/spec/lib/dradis/plugins/content_service/boards_spec.rb
 describe Dradis::Plugins::ContentService::Boards do
   let(:plugin)  { Dradis::Plugins::Nessus }
   let(:project) { create(:project) }
@@ -18,16 +20,25 @@ describe Dradis::Plugins::ContentService::Boards do
         node = create(:node, project: project)
         node_board = create(:board, node: node, project: project)
 
-        expect(service.all_boards).to include(board)
+        boards = service.all_boards
+
+        expect(boards).to include(board)
+        expect(boards).to_not include(node_board)
       end
     end
 
     describe '#create_board' do
-      it 'creates a board' do
-        node = create(:node, project: project)
-        service.create_board name: 'Test Board', node_id: node.id
+      it 'creates a board without a node' do
+        service.create_board(name: 'NodelessBoard')
 
-        expect(project.reload.boards.where(name: 'Test Board')).to_not be_nil
+        expect(project.reload.boards.where(name: 'NodelessBoard')).to_not be_nil
+      end
+
+      it 'creates a board with a node' do
+        node = create(:node, project: project)
+        service.create_board(name: 'NodeBoard', node_id: node.id)
+
+        expect(project.reload.boards.where(name: 'NodeBoard')).to_not be_nil
       end
     end
   end
