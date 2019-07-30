@@ -2,7 +2,7 @@ require 'rails_helper'
 
 # These specs are coming from engines/dradispro-rules/spec/content_service_spec.rb
 # To run, execute from Dradis main app folder:
-#   bin/rspec [dradis-plugins path]/spec/lib/dradis/plugins/content_service_spec.rb
+#   bin/rspec [dradis-plugins path]/spec/lib/dradis/plugins/content_service/issues_spec.rb
 
 describe Dradis::Plugins::ContentService::Base do
   let(:plugin)  { Dradis::Plugins::Nessus }
