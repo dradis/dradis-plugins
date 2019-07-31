@@ -1,4 +1,8 @@
-## Dradis Framework 3.12 (June, 2019) ##
+## Dradis Framework 3.14 (August, 2019) ##
+
+*  Add node to boards
+
+## Dradis Framework 3.13 (June, 2019) ##
 
 *  No changes.
 
