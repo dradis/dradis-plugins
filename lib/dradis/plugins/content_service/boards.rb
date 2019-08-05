@@ -3,6 +3,10 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_boards
+      project.boards
+    end
+
+    def project_boards
       project.methodology_library.boards
     end
 
