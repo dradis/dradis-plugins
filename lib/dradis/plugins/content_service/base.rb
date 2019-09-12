@@ -12,7 +12,7 @@ module Dradis::Plugins::ContentService
   class Base
     include Core
 
-    include Boards        if defined?(Dradis::Pro)
+    include Boards
     include Categories
     include ContentBlocks if defined?(Dradis::Pro)
     include Evidence
