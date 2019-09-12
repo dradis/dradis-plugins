@@ -1,3 +1,7 @@
+## Dradis Framework 3.15 (XXX, 2019) ##
+
+*  Make ContentService Boards available in CE
+
 ## Dradis Framework 3.14 (August, 2019) ##
 
 *  Add node to boards
