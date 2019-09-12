@@ -13,7 +13,11 @@ module Dradis::Plugins::ContentService
     def create_board(args={})
       name    = args.fetch(:name, default_board_name)
       node_id = args.fetch(:node_id, default_node_id)
-      Board.create(name: name, project_id: project.id, node_id: node_id)
+      Board.create(
+        name: name,
+        node_id: node_id,
+        project: project
+      )
     end
 
     private
