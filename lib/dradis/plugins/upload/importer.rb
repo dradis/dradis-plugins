@@ -12,6 +12,7 @@ module Dradis
           :options,
           :plugin,
           :project,
+          :default_issue_state,
           :template_service
         )
 
@@ -22,6 +23,7 @@ module Dradis
           @plugin  = args[:plugin] || default_plugin
           @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
           @default_user_id = args[:default_user_id] || -1
+          @default_issue_state = args[:state] || :draft
 
           @content_service  = args.fetch(:content_service, default_content_service)
           @template_service = args.fetch(:template_service, default_template_service)
@@ -40,6 +42,7 @@ module Dradis
         private
         def default_content_service
           @content ||= Dradis::Plugins::ContentService::Base.new(
+            default_issue_state: default_issue_state,
             logger: logger,
             plugin: plugin,
             project: project

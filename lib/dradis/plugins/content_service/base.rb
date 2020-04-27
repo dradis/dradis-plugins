@@ -21,6 +21,6 @@ module Dradis::Plugins::ContentService
     include Notes
     include Properties    if defined?(Dradis::Pro)
 
-     ActiveSupport.run_load_hooks(:content_service, self)
+    ActiveSupport.run_load_hooks(:content_service, self)
   end
 end
