@@ -67,6 +67,7 @@ module Dradis::Plugins::ContentService
     # Returns and Array with a unique collection of Nodes.
     def nodes_from_evidence
       all_issues.
+        published.
         includes(:evidence, evidence: :node).
         collect(&:evidence).
         # Each Issue can have 0, 1 or more Evidence
