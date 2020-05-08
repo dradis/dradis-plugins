@@ -12,10 +12,10 @@ module Dradis::Plugins::ContentService
     # @option plugin [Class] the 'wrapper' module of a plugin, e.g.
     #     Dradis::Plugins::Nessus
     def initialize(args={})
-      @default_issue_state  = args.fetch(:default_issue_state, :draft)
-      @logger               = args.fetch(:logger, Rails.logger)
-      @plugin               = args.fetch(:plugin)
-      @project              = args[:project]
+      @default_issue_state = args.fetch(:default_issue_state, :draft)
+      @logger = args.fetch(:logger, Rails.logger)
+      @plugin = args.fetch(:plugin)
+      @project = args[:project]
     end
 
     private

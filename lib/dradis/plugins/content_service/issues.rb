@@ -25,10 +25,10 @@ module Dradis::Plugins::ContentService
       text << plugin_details
 
       issue = Issue.new(text: text) do |i|
-        i.author    = default_author
-        i.node      = project.issue_library
-        i.category  = default_issue_category
-        i.state     = default_issue_state
+        i.author = default_author
+        i.category = default_issue_category
+        i.node = project.issue_library
+        i.state = default_issue_state
       end
 
       if issue.valid?
