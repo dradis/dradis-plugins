@@ -40,10 +40,15 @@ module Dradis
         private
         def default_content_service
           @content ||= Dradis::Plugins::ContentService::Base.new(
+            default_issue_state: default_issue_state,
             logger: logger,
             plugin: plugin,
             project: project
           )
+        end
+
+        def default_issue_state
+          :published
         end
 
         # This assumes the plugin's Importer class is directly nexted into the
