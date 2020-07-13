@@ -26,6 +26,10 @@ module Dradis
 
       private
 
+      def permissions_params
+        params.require(self.class.engine_name).permit(:permissions)
+      end
+
       class_methods do
         attr_accessor :engine_name
 
