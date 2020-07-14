@@ -9,7 +9,7 @@ module Dradis
         Permission.transaction do
           Permission.where(component: self.class.engine_name, user_id: params[:id]).destroy_all
 
-          params[:permissions]&.each do |permission|
+          permissions_params[:permissions]&.each do |permission|
             # Validate the permission being created is a valid value
             next unless "::Dradis::Pro::Plugins::#{self.class.engine_name.to_s.classify}::PERMISSIONS".constantize.include?(permission)
 
@@ -27,7 +27,7 @@ module Dradis
       private
 
       def permissions_params
-        params.require(self.class.engine_name).permit(:permissions)
+        params.require(self.class.engine_name).permit(permissions: [])
       end
 
       class_methods do
