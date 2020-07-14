@@ -34,7 +34,7 @@ module Dradis
         attr_accessor :engine_name
         attr_accessor :permissions_validation
 
-        def permissible_engine(engine_name, opts)
+        def permissible_engine(engine_name, opts = {})
           self.engine_name = engine_name
           self.permissions_validation = opts[:validation]
         end
