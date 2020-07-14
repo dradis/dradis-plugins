@@ -11,7 +11,7 @@ module Dradis
 
           permissions_params[:permissions]&.each do |permission|
             # Validate the permission being created is a valid value
-            next unless "::Dradis::Pro::Plugins::#{self.class.engine_name.to_s.classify}::PERMISSIONS".constantize.include?(permission)
+            next unless self.class.permissions_validation.call(permission) if self.class.permissions_validation
 
             Permission.create!(
               component: self.class.engine_name,
@@ -32,9 +32,11 @@ module Dradis
 
       class_methods do
         attr_accessor :engine_name
+        attr_accessor :permissions_validation
 
-        def permissible_engine(value)
-          self.engine_name = value
+        def permissible_engine(engine_name, opts)
+          self.engine_name = engine_name
+          self.permissions_validation = opts[:validation]
         end
       end
     end
