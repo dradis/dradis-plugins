@@ -1,3 +1,7 @@
+## Dradis Framework 3.18 (Jul, 2020) ##
+
+*  Added PersistentPermissions module to dry up permissions endpoints.
+
 ## Dradis Framework 3.17 (May, 2020) ##
 
 *  No changes.
