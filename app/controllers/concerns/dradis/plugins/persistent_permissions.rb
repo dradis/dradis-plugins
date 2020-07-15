@@ -4,7 +4,7 @@ module Dradis
       extend ActiveSupport::Concern
 
       def update
-        @user = User.find(params[:id])
+        @user = User.authors.find(params[:id])
 
         Permission.transaction do
           Permission.where(component: self.class.component_name, user_id: params[:id]).destroy_all
