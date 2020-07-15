@@ -1,6 +1,6 @@
 module Dradis
   module Plugins
-    module PersistantPermissions
+    module PersistentPermissions
       extend ActiveSupport::Concern
 
       def update
