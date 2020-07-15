@@ -33,7 +33,7 @@ module Dradis
       class_methods do
         attr_accessor :component_name, :permissions_validation
 
-        def permissible_engine(component_name, opts = {})
+        def permissible_tool(component_name, opts = {})
           self.component_name = component_name
           self.permissions_validation = opts[:validation]
         end
