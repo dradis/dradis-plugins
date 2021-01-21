@@ -1,4 +1,8 @@
-## Dradis Framework 3.20 (December, 2020) ##
+## Dradis Framework 3.21 (February, 2021) ##
+
+*  Rename `parent` methods to `module_parent` as `Module#parent` is deprecated.
+
+## Dradis Framework 3.20 (January, 2021) ##
 
 *  No changes.
 

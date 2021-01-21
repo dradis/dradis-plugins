@@ -22,7 +22,7 @@ module Dradis::Plugins::Upload::Base
   extend ActiveSupport::Concern
 
   included do
-    parent.extend NamespaceClassMethods
+    module_parent.extend NamespaceClassMethods
   end
 
   module ClassMethods
@@ -41,7 +41,7 @@ module Dradis::Plugins::Upload::Base
     #     ]
     #   end
     def uploaders()
-      [parent]
+      [module_parent]
     end
   end
 
