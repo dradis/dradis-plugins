@@ -1,3 +1,7 @@
+## Dradis Framework 3.22 (###, 2021) ##
+
+* ContentService#create_evidence: deduplicate Evidence from integrations.
+
 ## Dradis Framework 3.21 (February, 2021) ##
 
 *  Rename `parent` methods to `module_parent` as `Module#parent` is deprecated.
