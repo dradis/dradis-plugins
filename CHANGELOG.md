@@ -1,4 +1,4 @@
-## Dradis Framework 3.22 (###, 2021) ##
+## Dradis Framework 3.22 (April, 2021) ##
 
 * ContentService#create_evidence: deduplicate Evidence from integrations.
 
