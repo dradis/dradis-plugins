@@ -1,6 +1,3 @@
-v4.1.0 (November 2021)
-  - No changes
-
 v4.0.0 (July 2021)
   - No changes
 
