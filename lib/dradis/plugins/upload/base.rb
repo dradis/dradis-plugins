@@ -40,7 +40,7 @@ module Dradis::Plugins::Upload::Base
     #       Dradis::Plugins::Projects::Template
     #     ]
     #   end
-    def uploaders()
+    def uploaders
       [module_parent]
     end
 
