@@ -15,6 +15,10 @@ module Dradis
           :template_service
         )
 
+        def self.templates
+          { evidence: 'evidence', issue: 'issue' }
+        end
+
         def initialize(args={})
           @options = args
 

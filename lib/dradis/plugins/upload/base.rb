@@ -51,8 +51,8 @@ module Dradis::Plugins::Upload::Base
     #   end
     #
     # The default implementation returns nothing at all.
-    def template_names
-      { module_parent => [] }
+    def templates
+      uploaders.each_with_object({}) { |uploader, acc| acc[uploader] = uploader::Importer.templates }
     end
   end
 
