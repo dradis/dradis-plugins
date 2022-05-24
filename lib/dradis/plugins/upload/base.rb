@@ -40,8 +40,19 @@ module Dradis::Plugins::Upload::Base
     #       Dradis::Plugins::Projects::Template
     #     ]
     #   end
-    def uploaders()
+    def uploaders
       [module_parent]
+    end
+
+    # Return the list of templates that the module provides
+    #   def self.template_names
+    #     { Dradis::Plugins::Burp::Html => { evidence: 'html_evidence', issue: 'issue' } },
+    #     { Dradis::Plugins::Burp::Xml => { evidence: 'evidence', issue: 'issue' } }
+    #   end
+    #
+    # The default implementation returns nothing at all.
+    def templates
+      uploaders.each_with_object({}) { |uploader, acc| acc[uploader] = uploader::Importer.templates }
     end
   end
 
