@@ -10,6 +10,12 @@ module Dradis
         options.base_export_controller_class_name ||= 'AuthenticatedController'
         options.thor_helper_module ||= Dradis::Plugins::ThorHelper
       end
+
+      initializer 'dradis-plugins.mount_routes' do
+        Rails.application.routes.append do
+          mount Dradis::Plugins::Engine => '/', as: :engine
+        end
+      end
     end
   end
 end

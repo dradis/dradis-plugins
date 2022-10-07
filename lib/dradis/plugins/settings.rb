@@ -44,6 +44,15 @@ module Dradis::Plugins
       value.to_s == @default_options[key.to_sym].to_s
     end
 
+    def engine_enable
+      enable = db_setting(:enable)
+      enable ? (enable == '1') : nil
+    end
+
+    def toggle_engine(value)
+      write_to_db(:enable, value)
+    end
+
     private
 
     # ---------------------------------------------------- Method missing magic
