@@ -5,7 +5,7 @@ module Dradis::Plugins
     def initialize(namespace)
       @namespace = namespace
       @dirty_options ||= {}
-      @default_options ||= HashWithIndifferentAccess.new
+      @default_options ||= { enabled: false }.with_indifferent_access
     end
 
     def respond_to?(name)
@@ -13,7 +13,7 @@ module Dradis::Plugins
     end
 
     def all
-      @default_options.map do |key, value|
+      @default_options.except(:enabled).map do |key, value|
         {
           name: key.to_sym,
           value: value = dirty_or_db_setting_or_default(key.to_sym),
@@ -42,15 +42,6 @@ module Dradis::Plugins
 
     def is_default?(key, value)
       value.to_s == @default_options[key.to_sym].to_s
-    end
-
-    def engine_enable
-      enable = db_setting(:enable)
-      enable ? (enable == '1') : nil
-    end
-
-    def toggle_engine(value)
-      write_to_db(:enable, value)
     end
 
     private
