@@ -7,6 +7,10 @@ class TestEngine < ::Rails::Engine
 end
 
 describe Dradis::Plugins::Base do
+  before(:each) do
+    TestEngine::settings.reset_defaults!
+  end
+
   describe '#enabled?' do
     it 'returns default value' do
       expect(TestEngine.enabled?).to eq(false)
