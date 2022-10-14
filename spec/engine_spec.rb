@@ -23,7 +23,7 @@ describe Dradis::Plugins::Base do
       }.from(false).to(true)
     end
   end
-  describe '#disalbe!' do
+  describe '#disable!' do
     it 'sets enabled to false' do
       TestEngine.enable!
       expect { TestEngine.disable! }.to change {
