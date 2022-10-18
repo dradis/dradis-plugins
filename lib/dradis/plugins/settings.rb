@@ -5,7 +5,7 @@ module Dradis::Plugins
     def initialize(namespace)
       @namespace = namespace
       @dirty_options ||= {}
-      @default_options ||= { enabled: false }.with_indifferent_access
+      @default_options ||= { enabled: true }.with_indifferent_access
     end
 
     def respond_to?(name)
