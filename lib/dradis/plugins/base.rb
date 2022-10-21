@@ -39,6 +39,18 @@ module Dradis
         def provides?(feature)
           @features.include?(feature)
         end
+
+        def enabled?
+          ActiveRecord::Type::Boolean.new.cast(self.settings.enabled)
+        end
+
+        def enable!
+          self.settings.update_settings(enabled: true)
+        end
+
+        def disable!
+          self.settings.update_settings(enabled: false)
+        end
       end
     end
   end
