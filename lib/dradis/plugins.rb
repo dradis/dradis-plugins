@@ -11,10 +11,15 @@ module Dradis
         @@extensions
       end
 
+      # Returns an array of modules representing currently enabled engines
+      def enabled_list
+        @@extensions.select(&:enabled?)
+      end
+
       # Filters the list of plugins and only returns those that provide the
       # requested feature and enabled
       def with_feature(feature)
-        @@extensions.select do |plugin|
+        enabled_list.select do |plugin|
           # engine = "#{plugin}::Engine".constantize
           plugin.provides?(feature)
         end
