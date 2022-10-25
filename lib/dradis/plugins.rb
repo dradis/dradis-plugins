@@ -12,8 +12,23 @@ module Dradis
       end
 
       # Returns an array of modules representing currently enabled engines
+      #
+      # We're not using the `enabled?` method here since each call of that
+      # method queries for existence. Instead, we're querying the enabled
+      # configurations in one go, build a hash, then use that to check for the
+      # enabled extensions.
       def enabled_list
-        @@extensions.select(&:enabled?)
+        enabled_config = Configuration.where('name LIKE ?', '%:enabled').map do |config|
+          [config.name.split(':').first, config.value]
+        end.to_h.with_indifferent_access
+
+        @@extensions.select do |extension|
+          if value = enabled_config[extension.settings_namespace]
+            ActiveRecord::Type::Boolean.new.cast(value)
+          else
+            true
+          end
+        end
       end
 
       # Filters the list of plugins and only returns those that provide the
