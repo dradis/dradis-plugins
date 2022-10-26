@@ -1,7 +1,7 @@
 #
 # This spec must be ran from Dradis root dir
 #
-require 'spec_helper'
+require 'rails_helper'
 
 class TestEngine < ::Rails::Engine
   include ::Dradis::Plugins::Base
@@ -19,6 +19,7 @@ describe Dradis::Plugins::Settings do
   end
 
   it "sets and return default values" do
+    expect(TestEngine::settings.enabled).to eq(false)
     expect(TestEngine::settings.host).to eq('localhost')
     expect(TestEngine::settings.port).to eq(80)
   end
@@ -41,7 +42,6 @@ describe Dradis::Plugins::Settings do
   it "saves to db and returns persisted values" do
     expect(TestEngine::settings.host).to eq('localhost')
     TestEngine::settings.host = '127.0.0.1'
-    expect_any_instance_of(TestEngine::settings::send(:configuration_class)).to receive(:update_attribute)
     expect(TestEngine::settings.save).to eq( { host: '127.0.0.1'} )
     expect(TestEngine::settings.host).to eq('127.0.0.1')
   end
