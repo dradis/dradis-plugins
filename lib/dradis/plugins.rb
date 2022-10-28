@@ -13,7 +13,11 @@ module Dradis
 
       # Returns an array of modules representing currently enabled engines
       def enabled_list
-        @@extensions.select(&:enabled?)
+        @@enabled_list ||= @@extensions.select(&:enabled?)
+      end
+
+      def clear_enabled_list
+        @@enabled_list = nil
       end
 
       # Filters the list of plugins and only returns those that provide the
