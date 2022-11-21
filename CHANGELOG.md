@@ -1,5 +1,6 @@
+
 v4.6.0 (November 2022)
-  - No changes
+  - Added engine enable/disable functionality
 
 v4.5.0 (August 2022)
   - No changes
