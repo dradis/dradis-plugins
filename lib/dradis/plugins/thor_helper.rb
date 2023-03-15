@@ -9,7 +9,7 @@ module Dradis
       end
 
       def task_options
-        @task_options ||= { logger: logger, state: :draft }
+        @task_options ||= { logger: logger, state: :published }
       end
 
       def logger
