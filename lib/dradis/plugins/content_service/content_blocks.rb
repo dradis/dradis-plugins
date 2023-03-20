@@ -9,12 +9,14 @@ module Dradis::Plugins::ContentService
     def create_content_block(args={})
       block_group    = args.fetch(:block_group, default_content_block_group)
       content        = args.fetch(:content, default_content_block_content)
+      state          = args.fetch(:state, :published)
       user_id        = args.fetch(:user_id)
 
       content_block = ContentBlock.new(
         content: content,
         block_group: block_group,
         project_id: project.id,
+        state: state,
         user_id: user_id
       )
 
