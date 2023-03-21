@@ -17,7 +17,7 @@ describe 'Issues content service' do
 
   describe 'Issues' do
     let(:create_issue) do
-      service.create_issue(text: "#[Title]#\nTest Issue\n", id: plugin_id)
+      service.create_issue(text: "#[Title]#\nTest Issue\n", id: plugin_id, state: :ready_for_review)
     end
 
     describe 'when the issue already exists in the cache' do
