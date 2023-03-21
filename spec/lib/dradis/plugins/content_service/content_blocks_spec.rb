@@ -9,9 +9,9 @@ describe 'Content Block content service' do
   let(:project) { create(:project) }
   let(:service) do
     Dradis::Plugins::ContentService::Base.new(
-      plugin:,
+      plugin: plugin,
       logger: Rails.logger,
-      project:
+      project: project
     )
   end
 
