@@ -1,11 +1,11 @@
 require 'rails_helper'
 
+# These specs are coming from engines/dradispro-rules/spec/content_service_spec.rb
 # To run, execute from Dradis main app folder:
 #   bin/rspec [dradis-plugins path]/spec/lib/dradis/plugins/content_service/issues_spec.rb
 
-describe 'Issues content service' do
-  let(:plugin) { Dradis::Plugins::Nessus }
-  let(:plugin_id) { '111' }
+describe Dradis::Plugins::ContentService::Base do
+  let(:plugin)  { Dradis::Plugins::Nessus }
   let(:project) { create(:project) }
   let(:service) do
     Dradis::Plugins::ContentService::Base.new(
@@ -17,39 +17,47 @@ describe 'Issues content service' do
 
   describe 'Issues' do
     let(:create_issue) do
-      service.create_issue(text: "#[Title]#\nTest Issue\n", id: plugin_id, state: :ready_for_review)
+      service.create_issue_without_callback(id: plugin_id)
     end
 
+    # Remember: even though we're calling create_issue_without_callback,
+    # that method will still call issue_cache_with_callback internally.
+    # So when we store an issue in the issue_cache/finding_cache below,
+    # it's being stored within an instance of FindingCache, which
+    # automatically wraps Issues in Findings.
+
     describe 'when the issue already exists in the cache' do
-      before do
-        issue = create(:issue, text: "#[Title]#\nTest Issue\n", id: plugin_id)
-        service.issue_cache.store("nessus-#{plugin_id}", issue)
+      let(:existing_issue) { create(:issue, text: cached_issue_text) }
+      before { cache.store(existing_issue) }
+
+      it "doesn't create a new issue" do
+        expect{create_issue}.not_to change{Issue.count}
       end
 
-      it 'does not create a new issue' do
-        expect { create_issue }.not_to change { Issue.count }
+      it 'returns the cached issue encapsulated in a finding' do
+        finding = create_issue
+        expect(finding).to be_a(Finding)
+        expect(finding).to eq Finding.from_issue(existing_issue)
       end
     end
 
     describe "when the issue doesn't already exist in the cache" do
       it "creates a new Issue containing 'plugin' and 'plugin_id'" do
         new_issue = nil
-        plugin_name = "#{plugin}::Engine".constantize.plugin_name
-        expect { new_issue = create_issue }.to change { Issue.count }.by(1)
-        expect(new_issue.text).to match(/#\[plugin\]#\n*#{plugin_name}/)
-        expect(new_issue.text).to match(/#\[plugin_id\]#\n*#{plugin_id}/)
-      end
-    end
-
-    describe '#all_issues' do
-      before do
-        @draft_issues = create_list(:issue, 10, project: project, state: :draft)
-        @review_issues = create_list(:issue, 10, project: project, state: :ready_for_review)
-        @published_issues = create_list(:issue, 10, project: project, state: :published)
+        expect{new_issue = create_issue}.to change{Issue.count}.by(1)
+        expect(new_issue.body).to match(/#\[plugin\]#\n*#{plugin_name}/)
+        expect(new_issue.body).to match(/#\[plugin_id\]#\n*#{plugin_id}/)
       end
 
-      it 'returns only the published issues' do
-        expect(service.all_issues.to_a).to match_array(@published_issues)
+      it 'returns the new Issue encapsulated in a Finding' do
+        finding = create_issue
+        expect(finding).to be_a(Finding)
+        expect(finding).to eq Finding.from_issue(Issue.last)
+      end
+
+      it 'adds the new Finding to the cache' do
+        finding = create_issue
+        expect(cache[cache_key]).to eq finding
       end
     end
   end
