@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_content_blocks
-      project.content_blocks.published
+      project.content_blocks
     end
 
     def create_content_block(args={})
@@ -22,8 +22,6 @@ module Dradis::Plugins::ContentService
 
       if content_block.valid?
         content_block.save
-
-        return content_block
       else
         try_rescue_from_length_validation(
           model: content_block,

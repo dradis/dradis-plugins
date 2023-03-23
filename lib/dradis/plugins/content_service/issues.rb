@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_issues
-      project.issues.published.where(category_id: default_issue_category.id)
+      project.issues.where(category_id: default_issue_category.id)
     end
 
     def create_issue(args={})
