@@ -29,6 +29,8 @@ module Dradis::Plugins::ContentService
 
       if content_block.valid?
         content_block.save
+
+        return content_block
       else
         try_rescue_from_length_validation(
           model: content_block,
