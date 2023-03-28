@@ -10,6 +10,8 @@ require 'dradis/plugins/content_service/properties'
 
 module Dradis::Plugins::ContentService
   class Base
+    VALID_SCOPES = %w[all published]
+
     include Core
 
     include Boards
