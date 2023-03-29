@@ -6,12 +6,8 @@ module Dradis
 
         protected
 
-        # Protected: allows export plugins to access the options sent from the
-        # framework via the session object (see Export#create).
-        #
-        # Returns a Hash with indifferent access.
-        def export_options
-          @export_options ||= session[:export_manager].with_indifferent_access
+        def export_params
+          params.permit(:project_id, :scope, :template)
         end
 
         def validate_scope
