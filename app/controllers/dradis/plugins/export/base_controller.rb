@@ -11,9 +11,7 @@ module Dradis
         end
 
         def validate_scope
-          @scope = params[:scope]
-
-          unless Dradis::Plugins::ContentService::Base::VALID_SCOPES.include?(@scope)
+          unless Dradis::Plugins::ContentService::Base::VALID_SCOPES.include?(params[:scope])
             raise 'Something fishy is going on...'
           end
         end
