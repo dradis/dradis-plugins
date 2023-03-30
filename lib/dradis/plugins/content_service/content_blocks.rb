@@ -3,7 +3,14 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_content_blocks
-      project.content_blocks.published
+      case scope
+      when :all
+        project.content_blocks
+      when :published
+        project.content_blocks.published
+      else
+        raise 'Unsupported scope!'
+      end
     end
 
     def create_content_block(args={})

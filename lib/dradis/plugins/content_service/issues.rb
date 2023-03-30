@@ -3,7 +3,17 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_issues
-      project.issues.published.where(category_id: default_issue_category.id)
+      issues =
+        case scope
+        when :all
+          project.issues
+        when :published
+          project.issues.published
+        else
+          raise 'Unsupported scope!'
+        end
+
+      issues.where(category_id: default_issue_category.id)
     end
 
     def create_issue(args={})
