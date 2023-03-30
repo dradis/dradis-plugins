@@ -15,7 +15,7 @@ module Dradis
           @logger  = args.fetch(:logger, Rails.logger)
           @plugin  = args[:plugin] || default_plugin
           @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
-          @scope = args.fetch(:scope, 'published').to_sym
+          @scope = args.fetch(:scope, :published).to_sym
 
           @content_service = args.fetch(:content_service, default_content_service)
 
