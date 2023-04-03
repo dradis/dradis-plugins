@@ -12,6 +12,7 @@ module Dradis
           :options,
           :plugin,
           :project,
+          :state,
           :template_service
         )
 
@@ -22,10 +23,11 @@ module Dradis
         def initialize(args={})
           @options = args
 
-          @logger  = args.fetch(:logger, Rails.logger)
-          @plugin  = args[:plugin] || default_plugin
-          @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
           @default_user_id = args[:default_user_id] || -1
+          @logger = args.fetch(:logger, Rails.logger)
+          @plugin = args[:plugin] || default_plugin
+          @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
+          @state = args.fetch(:state, :published)
 
           @content_service  = args.fetch(:content_service, default_content_service)
           @template_service = args.fetch(:template_service, default_template_service)
@@ -46,7 +48,8 @@ module Dradis
           @content ||= Dradis::Plugins::ContentService::Base.new(
             logger: logger,
             plugin: plugin,
-            project: project
+            project: project,
+            state: state
           )
         end
 

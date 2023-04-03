@@ -3,23 +3,34 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_content_blocks
-      project.content_blocks
+      case scope
+      when :all
+        project.content_blocks
+      when :published
+        project.content_blocks.published
+      else
+        raise 'Unsupported scope!'
+      end
     end
 
     def create_content_block(args={})
       block_group    = args.fetch(:block_group, default_content_block_group)
       content        = args.fetch(:content, default_content_block_content)
+      state          = args.fetch(:state, :published)
       user_id        = args.fetch(:user_id)
 
       content_block = ContentBlock.new(
         content: content,
         block_group: block_group,
         project_id: project.id,
+        state: state,
         user_id: user_id
       )
 
       if content_block.valid?
         content_block.save
+
+        return content_block
       else
         try_rescue_from_length_validation(
           model: content_block,

@@ -3,7 +3,17 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_issues
-      project.issues.where(category_id: default_issue_category.id)
+      issues =
+        case scope
+        when :all
+          project.issues
+        when :published
+          project.issues.published
+        else
+          raise 'Unsupported scope!'
+        end
+
+      issues.where(category_id: default_issue_category.id)
     end
 
     def create_issue(args={})
@@ -11,6 +21,7 @@ module Dradis::Plugins::ContentService
       # NOTE that ID is the unique issue identifier assigned by the plugin,
       # and is not to be confused with the Issue#id primary key
       id   = args.fetch(:id, default_issue_id)
+      state = args.fetch(:state, @state)
 
       # Bail if we already have this issue in the cache
       uuid      = [plugin::Engine::plugin_name, id]
@@ -25,9 +36,10 @@ module Dradis::Plugins::ContentService
       text << plugin_details
 
       issue = Issue.new(text: text) do |i|
-        i.author   = default_author
-        i.node     = project.issue_library
+        i.author = default_author
+        i.node = project.issue_library
         i.category = default_issue_category
+        i.state = state
       end
 
       if issue.valid?
