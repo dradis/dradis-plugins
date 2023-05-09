@@ -84,6 +84,8 @@ require 'dradis/plugins/upload'
 # Common functionality
 require 'dradis/plugins/configurable'
 require 'dradis/plugins/settings'
+require 'dradis/plugins/settings/adapters/db'
+require 'dradis/plugins/settings/adapters/encrypted_configuration'
 require 'dradis/plugins/templates'
 require 'dradis/plugins/thor'
 require 'dradis/plugins/thor_helper'

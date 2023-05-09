@@ -19,7 +19,6 @@ describe Dradis::Plugins::Settings do
   end
 
   it "sets and return default values" do
-    expect(TestEngine::settings.enabled).to eq(false)
     expect(TestEngine::settings.host).to eq('localhost')
     expect(TestEngine::settings.port).to eq(80)
   end

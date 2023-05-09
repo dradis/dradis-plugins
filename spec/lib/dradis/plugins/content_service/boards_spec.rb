@@ -20,7 +20,7 @@ describe Dradis::Plugins::ContentService::Boards do
         node = create(:node, project: project)
         node_board = create(:board, node: node, project: project)
 
-        boards = service.all_boards
+        boards = service.project_boards
 
         expect(boards).to include(board)
         expect(boards).to_not include(node_board)
