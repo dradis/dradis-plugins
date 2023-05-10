@@ -17,14 +17,15 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def exists?(key)
-      configuration.config[@namespace].key?(key)
+      configuration.config[@namespace].key?(key) rescue false
     end
 
     def read(key)
-      configuration.config[@namespace][key]
+      configuration.config[@namespace][key] rescue nil
     end
 
     def write(key, value)
+      configuration.config[@namespace] ||= {}
       configuration.config[@namespace][key] = value
       configuration.write(configuration.config.to_yaml)
     end
