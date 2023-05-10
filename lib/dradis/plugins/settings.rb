@@ -25,9 +25,9 @@ module Dradis::Plugins
 
     def save
       @dirty_options.reject do |k, v|
-        v.present? && v == read(namespaced_key(k))
+        v.present? && v == read(k)
       end.each do |k, v|
-        write(namespaced_key(k), v)
+        write(k, v)
       end
     end
 
@@ -41,7 +41,7 @@ module Dradis::Plugins
     def reset_defaults!
       @dirty_options = {}
       @default_options.each do |key, value|
-        delete(namespaced_key(key)) if exists?(namespaced_key(key))
+        delete(key) if exists?(key)
       end
     end
 
@@ -70,7 +70,7 @@ module Dradis::Plugins
     def assign_adapter(name)
       adapters = { db: Adapters::Db, encrypted_configuration: Adapters::EncryptedConfiguration }
       if adapters.key?(name)
-        @adapter = adapters[name].new
+        @adapter = adapters[name].new(namespace)
       else
         raise ArgumentError
       end
@@ -82,16 +82,11 @@ module Dradis::Plugins
     def dirty_or_stored_or_default(key)
       if @dirty_options.key?(key)
         @dirty_options[key]
-      elsif exists?(namespaced_key(key))
-        read(namespaced_key(key))
+      elsif exists?(key)
+        read(key)
       else
         @default_options[key]
       end
-    end
-
-    # Builds namespaced key
-    def namespaced_key(key)
-      [self.namespace.to_s, key.to_s.underscore].join(":")
     end
   end
 end
