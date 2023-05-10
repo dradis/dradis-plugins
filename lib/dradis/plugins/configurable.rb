@@ -3,7 +3,7 @@ module Dradis::Plugins
     extend ActiveSupport::Concern
 
     module ClassMethods
-      delegate :settings, to: :instance
+      delegate :encrypted_settings, :settings, to: :instance
 
       def settings_namespace
         @settings_namespace || plugin_name
@@ -26,7 +26,7 @@ module Dradis::Plugins
 
     def encrypted_settings
       @encrypted_settings ||= Dradis::Plugins::Settings.new(self.class.settings_namespace, adapter: :encrypted_configuration)
-      end
+    end
 
     def settings
       @settings ||= Dradis::Plugins::Settings.new(self.class.settings_namespace, adapter: :db)
