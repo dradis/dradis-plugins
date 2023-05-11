@@ -1,12 +1,9 @@
 module Dradis::Plugins::Settings::Adapters
   class EncryptedConfiguration
-    attr_accessor :config_path
-    attr_reader :key_path
+    attr_writer :config_path
 
     def initialize(namespace)
       @namespace = namespace
-      @config_path = Rails.root.join('config', 'shared', 'dradis-plugins.yml.enc')
-      @key_path = Rails.root.join('config', 'shared', 'dradis-plugins.key')
     end
 
     def delete(key)
@@ -35,6 +32,10 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     private
+    def config_path
+      @config_path ||= Rails.root.join('config', 'shared', 'dradis-plugins.yml.enc')
+    end
+
     def configuration
       @configuration ||= begin
           create_key unless key_path.exist?
@@ -48,6 +49,10 @@ module Dradis::Plugins::Settings::Adapters
 
     def create_key
       File.write(key_path, ActiveSupport::EncryptedConfiguration.generate_key)
+    end
+
+    def key_path
+      @key_path ||= Rails.root.join('config', 'shared', 'dradis-plugins.key')
     end
   end
 end
