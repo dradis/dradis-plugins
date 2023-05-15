@@ -1,3 +1,6 @@
+v4.9.0 (XXX 2023)
+  - Fix deduplication of findings
+
 v4.8.0 (April 2023)
   - Add support for issue and content block states
 
