@@ -14,11 +14,11 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def exists?(key)
-      configuration.config[@namespace].key?(key) rescue false
+      !!configuration.config[@namespace]&.key?(key)
     end
 
     def read(key)
-      configuration.config[@namespace][key] rescue nil
+      configuration.config[@namespace].fetch(key, nil)
     end
 
     def write(key, value)

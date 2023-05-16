@@ -13,7 +13,7 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def read(key)
-      Configuration.find_by(name: namespaced_key(key)).value rescue nil
+      Configuration.find_by(name: namespaced_key(key))&.value
     end
 
     def write(key, value)
