@@ -18,7 +18,7 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def read(key)
-      configuration.config[@namespace].fetch(key, nil)
+      configuration.config.fetch(@namespace, {}).fetch(key, nil)
     end
 
     def write(key, value)
