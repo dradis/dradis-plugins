@@ -1,5 +1,6 @@
 vX.X.X (Mmmm 2023)
-  - Engine settings: can now be stored encrypted
+  - Fix deduplication of findings
+  - Store engine settings encrypted
 
 v4.8.0 (April 2023)
   - Add support for issue and content block states
