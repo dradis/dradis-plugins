@@ -13,11 +13,14 @@ describe Dradis::Plugins::Base do
 
   describe '#enabled?' do
     it 'returns default value' do
-      expect(TestEngine.enabled?).to eq(false)
+      expect(TestEngine.enabled?).to eq(true)
     end
   end
   describe '#enable!' do
     it 'sets enabled to true' do
+      TestEngine.settings.enabled = false
+      TestEngine.settings.save
+
       expect { TestEngine.enable! }.to change {
         TestEngine.enabled?
       }.from(false).to(true)
@@ -25,7 +28,9 @@ describe Dradis::Plugins::Base do
   end
   describe '#disable!' do
     it 'sets enabled to false' do
-      TestEngine.enable!
+      TestEngine.settings.enabled = true
+      TestEngine.settings.save
+
       expect { TestEngine.disable! }.to change {
         TestEngine.enabled?
       }.from(true).to(false)
