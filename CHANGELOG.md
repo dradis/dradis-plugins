@@ -1,5 +1,5 @@
 v4.10.0 (Month 2023)
-  - Update the Export::BaseController to support the Dradis export changes
+  - Add validations to the Export::BaseController
 
 v4.9.0 (June 2023)
   - Fix deduplication of findings
