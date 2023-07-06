@@ -40,11 +40,12 @@ module Dradis
         end
 
         def track_export
+          project = Project.includes(:evidence, :nodes).find(current_project.id)
           track_usage('report.exported', {
             exporter: engine_name,
-            issue_count: current_project.issues.size,
-            evidence_count: current_project.evidence.size,
-            node_count: current_project.nodes.in_tree.size
+            issue_count: project.issues.size,
+            evidence_count: project.evidence.size,
+            node_count: project.nodes.in_tree.size
           })
         end
       end
