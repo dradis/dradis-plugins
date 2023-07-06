@@ -2,8 +2,11 @@ module Dradis
   module Plugins
     module Export
       class BaseController < Rails.application.config.dradis.base_export_controller_class_name.to_s.constantize
+        include UsageTracking if defined?(Dradis::Pro)
+
         before_action :validate_scope
         before_action :validate_template
+        after_action :track_export, if: -> { defined?(Dradis::Pro) }
 
         protected
 
@@ -34,6 +37,15 @@ module Dradis
 
         def templates_dir
           @templates_dir ||= File.join(::Configuration::paths_templates_reports, engine_name)
+        end
+
+        def track_export
+          track_usage('report.exported', {
+            exporter: engine_name,
+            issue_count: current_project.issues.size,
+            evidence_count: current_project.evidence.size,
+            node_count: current_project.nodes.in_tree.size
+          })
         end
       end
     end
