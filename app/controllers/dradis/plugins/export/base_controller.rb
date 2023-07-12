@@ -2,6 +2,7 @@ module Dradis
   module Plugins
     module Export
       class BaseController < Rails.application.config.dradis.base_export_controller_class_name.to_s.constantize
+        include ProjectScoped
         include UsageTracking if defined?(Dradis::Pro)
 
         before_action :validate_scope
