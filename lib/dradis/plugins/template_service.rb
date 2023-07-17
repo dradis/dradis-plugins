@@ -3,21 +3,20 @@ module Dradis
     class TemplateService
       attr_accessor :logger, :template, :templates_dir
 
-      def initialize(args={})
+      def initialize(args = {})
         @plugin        = args.fetch(:plugin)
         @templates_dir = args[:templates_dir] || default_templates_dir
       end
 
-
       # For a given entry, return a text blob resulting from applying the
       # chosen template to the supplied entry.
-      def process_template(args={})
+      def process_template(args = {})
         self.template = args[:template]
         data          = args[:data]
 
         processor = @plugin::FieldProcessor.new(data: data)
 
-        template_source.gsub( /%(.*?)%/ ) do |field|
+        template_source.gsub(/%(\S*?)%/) do |field|
           name = field[1..-2]
           if fields.include?(name)
             processor.value(field: name)
@@ -26,7 +25,6 @@ module Dradis
           end
         end
       end
-
 
       # ---------------------------------------------- Plugin Manager interface
 
@@ -51,7 +49,7 @@ module Dradis
 
       # Set the plugin's item template. This is used by the Plugins Manager
       # to force the plugin to use the new_template (provided by the user)
-      def set_template(args={})
+      def set_template(args = {})
         template = args[:template]
         content  = args[:content]
 
@@ -77,7 +75,7 @@ module Dradis
           # refresh cached version if modified since last read
           if template_mtime > @sources[template][:mtime]
             @template[template][:mtime] = template_mtime
-            @template[template][:content] = File.read( template_file )
+            @template[template][:content] = File.read(template_file)
           end
         else
           @sources[template] = {
