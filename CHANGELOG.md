@@ -1,5 +1,6 @@
-v4.10.0 (Month 2023)
+v4.10.0 (September 2023)
   - Add validations to the Export::BaseController
+  - Update gemspec links
 
 v4.9.0 (June 2023)
   - Fix deduplication of findings
