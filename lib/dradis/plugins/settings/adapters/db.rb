@@ -9,7 +9,8 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def exists?(key)
-      Configuration.exists?(name: namespaced_key(key))
+      (ActiveRecord::Base.connection rescue false) &&
+        Configuration.exists?(name: namespaced_key(key))
     end
 
     def read(key)
