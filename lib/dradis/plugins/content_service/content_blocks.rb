@@ -3,7 +3,7 @@ module Dradis::Plugins::ContentService
     extend ActiveSupport::Concern
 
     def all_content_blocks
-      case scope
+      case scope.to_sym
       when :all
         project.content_blocks
       when :published
