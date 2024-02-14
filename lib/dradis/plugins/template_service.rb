@@ -1,23 +1,50 @@
 module Dradis
   module Plugins
     class TemplateService
-      attr_accessor :logger, :template, :templates_dir
+      attr_accessor :logger, :plugin, :processor, :project, :template, :templates_dir
 
       def initialize(args = {})
         @plugin        = args.fetch(:plugin)
         @templates_dir = args[:templates_dir] || default_templates_dir
+        @project       = args.fetch(:project, nil)
       end
 
       # For a given entry, return a text blob resulting from applying the
-      # chosen template to the supplied entry.
+      # appropriate mapping to the supplied entry.
       def process_template(args = {})
         self.template = args[:template]
         data          = args[:data]
+        @processor    = plugin::FieldProcessor.new(data: data)
 
-        processor = @plugin::FieldProcessor.new(data: data)
+        if mapping && mapping.mapping_fields.any?
+          apply_mapping(mapping.mapping_fields)
+        else
+          apply_default_mapping
+        end.join("\n\n")
+      end
 
-        template_source.gsub(/%(\S*?)%/) do |field|
-          name = field[1..-2]
+      def apply_mapping(mapping_fields)
+        mapping_fields.map do |mapping_field|
+          field_title = "#[#{mapping_field.destination_field}]#"
+          field_content = process_content(mapping_field.content)
+          "#{field_title}\n\n#{field_content}"
+        end
+      end
+
+      def apply_default_mapping
+        default_mapping = plugin::Mapping.default_mapping[template]
+
+        default_mapping.map do |field, content|
+          field_title = "#[#{field}]#"
+          field_content = process_content(content)
+          "#{field_title}\n\n#{field_content}"
+        end
+      end
+
+      def process_content(content)
+        content.gsub(/{{\s?#{plugin.name.demodulize.downcase}\[(\S*?)\]\s?}}/) do |field|
+          name = field.split(/\[|\]/)[1]
+
           if fields.include?(name)
             processor.value(field: name)
           else
@@ -36,6 +63,21 @@ module Dradis
           fields_file = File.join(templates_dir, "#{template}.fields")
           File.readlines(fields_file).map(&:chomp)
         end
+      end
+
+      def mapping
+        rtp =
+          if project.report_template_properties
+            "rtp_#{project.report_template_properties_id}"
+          else
+            '' # allow for an empty string in CE
+          end
+
+        mapping = Mapping.includes(:mapping_fields).find_by(
+          component: plugin.name.demodulize.downcase,
+          source: template,
+          destination: rtp
+        )
       end
 
       # This returns a sample of valid entry for the Plugin Manager
@@ -94,7 +136,7 @@ module Dradis
       # for their templates.
       def default_templates_dir
         @default_templates_dir ||= begin
-          File.join(Configuration.paths_templates_plugins, @plugin::meta[:name].to_s)
+          File.join(Configuration.paths_templates_plugins, plugin::meta[:name].to_s)
         end
       end
     end

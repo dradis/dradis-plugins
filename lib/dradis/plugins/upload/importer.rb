@@ -75,7 +75,8 @@ module Dradis
         def default_template_service
           @template ||= Dradis::Plugins::TemplateService.new(
             logger: logger,
-            plugin: plugin
+            plugin: plugin,
+            project: project
           )
         end
       end # Importer
