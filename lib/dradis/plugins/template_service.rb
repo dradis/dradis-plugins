@@ -66,11 +66,12 @@ module Dradis
       end
 
       def mapping
+        return nil unless project
         rtp =
           if project.report_template_properties
             "rtp_#{project.report_template_properties_id}"
           else
-            '' # allow for an empty string in CE
+            nil # allow for nil in CE
           end
 
         mapping = Mapping.includes(:mapping_fields).find_by(
