@@ -28,6 +28,38 @@ module Dradis
           end
         end
 
+        def copy_templates_to_db(args={})
+          return unless plugin_name == :qualys
+
+          from = args.fetch(:from)
+          from_dir = File.join(from, plugin_name.to_s)
+          templates = Dir["#{from_dir}/*"]
+          templates.each do |template|
+            next unless template.include?(".template")
+            mapping_source = File.basename(template, ".template")
+
+            mapping = Mapping.find_or_create_by(
+              component: plugin_name.to_s,
+              source: mapping_source,
+              destination: ''
+            )
+
+            file_data = File.open(template).read
+            file_data.split("\n\n").each do |line|
+              line_data = line.split("\n")
+              source_field = line_data.first.delete("#[").delete("]#").downcase
+              content = line_data.last.gsub(/\A%/, "{{ ").gsub("%"," }}")
+              destination_field = content.split(".").last.delete(" }}")
+
+              mapping.mapping_fields.find_or_create_by(
+                source_field: source_field,
+                content: content,
+                destination_field: destination_field
+              )
+            end
+          end
+        end
+
         def plugin_templates(args={})
           @templates ||= begin
             if paths['dradis/templates'].existent.any?
