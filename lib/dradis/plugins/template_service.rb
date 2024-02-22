@@ -16,13 +16,13 @@ module Dradis
         data          = args[:data]
         @processor    = plugin::FieldProcessor.new(data: data)
 
-        apply_mapping(mapping).join("\n\n")
+        apply_mapping(mapping)&.join("\n\n")
       end
 
       def apply_mapping(mapping)
         # fetch mapping_fields through mapping or default mapping fields through plugin
         mapping_fields =
-          if mapping
+          if mapping && mapping.mapping_fields.any?
             mapping.mapping_fields
           else
             plugin::Mapping.default_mapping[template]
@@ -31,7 +31,7 @@ module Dradis
         mapping_fields.map do |field|
           field_name = field.try(:destination_field) || field[0]
           field_content = process_content(field.try(:content) || field[1])
-          "#[#{field_name}]#\n\n#{field_content}"
+          "#[#{field_name.titleize}]#\n\n#{field_content}"
         end
       end
 
