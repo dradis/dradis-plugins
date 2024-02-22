@@ -16,28 +16,24 @@ module Dradis
         data          = args[:data]
         @processor    = plugin::FieldProcessor.new(data: data)
 
-        if mapping && mapping.mapping_fields.any?
-          apply_mapping(mapping.mapping_fields)
-        else
-          apply_default_mapping
-        end.join("\n\n")
+        apply_mapping(mapping).join("\n\n")
       end
 
-      def apply_mapping(mapping_fields)
-        mapping_fields.map do |mapping_field|
-          field_title = "#[#{mapping_field.destination_field}]#"
-          field_content = process_content(mapping_field.content)
-          "#{field_title}\n\n#{field_content}"
-        end
-      end
+      def apply_mapping(mapping)
+        # fetch mapping_fields through mapping or default mapping fields through plugin
+        mapping_fields =
+          if mapping
+            mapping.mapping_fields
+          else
+            plugin::Mapping.default_mapping[template]
+          end
 
-      def apply_default_mapping
-        default_mapping = plugin::Mapping.default_mapping[template]
-
-        default_mapping.map do |field, content|
-          field_title = "#[#{field}]#"
-          field_content = process_content(content)
-          "#{field_title}\n\n#{field_content}"
+        mapping_fields.map do |field|
+          field_name = field.try(:destination_field) || field[0]
+          # field_title = "#[#{field_title}]#"
+          # field_content = field.try(:content) || field[1]
+          field_content = process_content(field.try(:content) || field[1])
+          "#[#{field_name}]#\n\n#{field_content}"
         end
       end
 
@@ -74,7 +70,7 @@ module Dradis
             nil # allow for nil in CE
           end
 
-        mapping = Mapping.includes(:mapping_fields).find_by(
+        Mapping.includes(:mapping_fields).find_by(
           component: plugin.name.demodulize.downcase,
           source: template,
           destination: rtp
