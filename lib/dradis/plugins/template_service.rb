@@ -30,8 +30,6 @@ module Dradis
 
         mapping_fields.map do |field|
           field_name = field.try(:destination_field) || field[0]
-          # field_title = "#[#{field_title}]#"
-          # field_content = field.try(:content) || field[1]
           field_content = process_content(field.try(:content) || field[1])
           "#[#{field_name}]#\n\n#{field_content}"
         end
