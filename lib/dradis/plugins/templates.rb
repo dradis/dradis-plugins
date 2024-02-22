@@ -32,6 +32,7 @@ module Dradis
           from = args.fetch(:from)
           from_dir = File.join(from, plugin_name.to_s)
           templates = Dir["#{from_dir}/*"]
+
           templates.each do |template|
             next unless template.include?(".template")
             mapping_source = File.basename(template, ".template")
@@ -45,9 +46,9 @@ module Dradis
             file_data = File.open(template).read
             file_data.split("\n\n").reject{ |l| l.empty? }.each do |line|
               line_data = line.split("\n").reject{ |l| l.empty? }
-              source_field = line_data.first.delete("#[").delete("]#").downcase
+              source_field = line_data.first.delete("#[").delete("]#")
               content = line_data.last.gsub(/%(?=\S)/, "{{ #{plugin_name}[").gsub("%","] }}")
-              destination_field = content.split(".").last.delete(" }}")
+              destination_field = content.scan(/(?<=\.)\w+/).join(", ")
 
               mapping.mapping_fields.find_or_create_by(
                 source_field: source_field,
@@ -55,6 +56,8 @@ module Dradis
                 destination_field: destination_field
               )
             end
+
+            File.delete(template) if File.exists? template
           end
         end
 
