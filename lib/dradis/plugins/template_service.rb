@@ -19,34 +19,6 @@ module Dradis
         apply_mapping(mapping)&.join("\n\n")
       end
 
-      def apply_mapping(mapping)
-        # fetch mapping_fields through mapping or default mapping fields through plugin
-        mapping_fields =
-          if mapping && mapping.mapping_fields.any?
-            mapping.mapping_fields
-          else
-            plugin::Mapping.default_mapping[template]
-          end
-
-        mapping_fields.map do |field|
-          field_name = field.try(:destination_field) || field[0]
-          field_content = process_content(field.try(:content) || field[1])
-          "#[#{field_name.titleize}]#\n\n#{field_content}"
-        end
-      end
-
-      def process_content(content)
-        content.gsub(/{{\s?#{plugin.name.demodulize.downcase}\[(\S*?)\]\s?}}/) do |field|
-          name = field.split(/\[|\]/)[1]
-
-          if fields.include?(name)
-            processor.value(field: name)
-          else
-            "Field [#{field}] not recognized by the plugin"
-          end
-        end
-      end
-
       # ---------------------------------------------- Plugin Manager interface
 
       # This lists the fields defined by this plugin that can be used in the
@@ -57,22 +29,6 @@ module Dradis
           fields_file = File.join(templates_dir, "#{template}.fields")
           File.readlines(fields_file).map(&:chomp)
         end
-      end
-
-      def mapping
-        return nil unless project
-        rtp =
-          if project.report_template_properties
-            "rtp_#{project.report_template_properties_id}"
-          else
-            nil # allow for nil in CE
-          end
-
-        Mapping.includes(:mapping_fields).find_by(
-          component: plugin.name.demodulize.downcase,
-          source: template,
-          destination: rtp
-        )
       end
 
       # This returns a sample of valid entry for the Plugin Manager
@@ -127,11 +83,55 @@ module Dradis
 
       private
 
+      def apply_mapping(mapping)
+        # fetch mapping_fields through mapping or default mapping fields through plugin
+        mapping_fields =
+          if mapping && mapping.mapping_fields.any?
+            mapping.mapping_fields
+          else
+            plugin::Mapping.default_mapping[template]
+          end
+
+        mapping_fields.map do |field|
+          field_name = field.try(:destination_field) || field[0]
+          field_content = process_content(field.try(:content) || field[1])
+          "#[#{field_name.titleize}]#\n\n#{field_content}"
+        end
+      end
+
       # This method returns the default location in which plugins should look
       # for their templates.
       def default_templates_dir
         @default_templates_dir ||= begin
           File.join(Configuration.paths_templates_plugins, plugin::meta[:name].to_s)
+        end
+      end
+
+      def mapping
+        return nil unless project
+        rtp =
+          if project.report_template_properties
+            "rtp_#{project.report_template_properties_id}"
+          else
+            nil # allow for nil in CE
+          end
+
+        Mapping.includes(:mapping_fields).find_by(
+          component: plugin.name.demodulize.downcase,
+          source: template,
+          destination: rtp
+        )
+      end
+
+      def process_content(content)
+        content.gsub(/{{\s?#{plugin.name.demodulize.downcase}\[(\S*?)\]\s?}}/) do |field|
+          name = field.split(/\[|\]/)[1]
+
+          if fields.include?(name)
+            processor.value(field: name)
+          else
+            "Field [#{field}] not recognized by the plugin"
+          end
         end
       end
     end
