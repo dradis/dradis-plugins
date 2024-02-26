@@ -49,7 +49,7 @@ module Dradis
         # this is the first time they've started Dradis since this template was
         # added.)
         def skip?(file_path)
-          File.exist?(file_path) && File.extname(file_path) == ".template"
+          File.extname(file_path) == ".template"
         end
       end
     end
