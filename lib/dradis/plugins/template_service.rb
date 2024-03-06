@@ -1,12 +1,12 @@
 module Dradis
   module Plugins
     class TemplateService
-      attr_accessor :logger, :plugin, :processor, :project, :template, :templates_dir
+      attr_accessor :logger, :plugin, :rtp_id, :template, :templates_dir
 
       def initialize(args = {})
         @plugin        = args.fetch(:plugin)
         @templates_dir = args[:templates_dir] || default_templates_dir
-        @project       = args.fetch(:project, nil)
+        @rtp_id        = args.fetch(:rtp_id, nil)
       end
 
       # For a given entry, return a text blob resulting from applying the
@@ -14,9 +14,9 @@ module Dradis
       def process_template(args = {})
         self.template = args[:template]
         data          = args[:data]
-        @processor    = plugin::FieldProcessor.new(data: data)
+        processor    = plugin::FieldProcessor.new(data: data)
 
-        apply_mapping(mapping)&.join("\n\n")
+        apply_mapping(processor)&.join("\n\n")
       end
 
       # ---------------------------------------------- Plugin Manager interface
@@ -83,18 +83,10 @@ module Dradis
 
       private
 
-      def apply_mapping(mapping)
-        # fetch mapping_fields through mapping or default mapping fields through plugin
-        mapping_fields =
-          if mapping && mapping.mapping_fields.any?
-            mapping.mapping_fields
-          else
-            plugin::Mapping.default_mapping[template]
-          end
-
+      def apply_mapping(processor)
         mapping_fields.map do |field|
           field_name = field.try(:destination_field) || field[0]
-          field_content = process_content(field.try(:content) || field[1])
+          field_content = process_content(field.try(:content) || field[1], processor)
           "#[#{field_name.titleize}]#\n\n#{field_content}"
         end
       end
@@ -107,23 +99,22 @@ module Dradis
         end
       end
 
-      def mapping
-        return nil unless project
-        rtp =
-          if project.report_template_properties
-            "rtp_#{project.report_template_properties_id}"
-          else
-            nil # allow for nil in CE
-          end
-
-        Mapping.includes(:mapping_fields).find_by(
+      def mapping_fields
+        mapping = Mapping.includes(:mapping_fields).find_by(
           component: plugin.name.demodulize.downcase,
           source: template,
-          destination: rtp
+          destination: rtp_id ? "rtp_#{rtp_id}" : nil
         )
+
+        # fetch mapping_fields through mapping or default
+        if mapping && mapping.mapping_fields.any?
+          mapping.mapping_fields
+        else
+          plugin::Mapping.default_mapping[template]
+        end
       end
 
-      def process_content(content)
+      def process_content(content, processor)
         content.gsub(/{{\s?#{plugin.name.demodulize.downcase}\[(\S*?)\]\s?}}/) do |field|
           name = field.split(/\[|\]/)[1]
 

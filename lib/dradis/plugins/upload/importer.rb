@@ -76,7 +76,7 @@ module Dradis
           @template ||= Dradis::Plugins::TemplateService.new(
             logger: logger,
             plugin: plugin,
-            project: project
+            rtp_id: project.report_template_properties_id
           )
         end
       end # Importer
