@@ -9,6 +9,7 @@ module Dradis
           :content_service,
           :default_user_id,
           :logger,
+          :mapping_service,
           :options,
           :plugin,
           :project,
@@ -29,8 +30,9 @@ module Dradis
           @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
           @state = args.fetch(:state, :published)
 
-          @content_service  = args.fetch(:content_service, default_content_service)
-          @template_service = args.fetch(:template_service, default_template_service)
+          @content_service   = args.fetch(:content_service, default_content_service)
+          @template_service  = args.fetch(:template_service, default_template_service)
+          @mapping_service   = default_mapping_service
 
           post_initialize(args)
         end
@@ -75,6 +77,12 @@ module Dradis
         def default_template_service
           @template ||= Dradis::Plugins::TemplateService.new(
             logger: logger,
+            plugin: plugin
+          )
+        end
+
+        def default_mapping_service
+          Dradis::Plugins::MappingService.new(
             plugin: plugin,
             rtp_id: project.report_template_properties_id
           )
