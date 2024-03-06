@@ -1,7 +1,7 @@
 module Dradis
   module Plugins
     class TemplateService
-      attr_accessor :logger, :plugin, :template, :templates_dir
+      attr_accessor :logger, :template, :templates_dir
 
       def initialize(args = {})
         @plugin        = args.fetch(:plugin)
@@ -43,7 +43,7 @@ module Dradis
       # for their templates.
       def default_templates_dir
         @default_templates_dir ||= begin
-          File.join(Configuration.paths_templates_plugins, plugin::meta[:name].to_s)
+          File.join(Configuration.paths_templates_plugins, @plugin::meta[:name].to_s)
         end
       end
     end

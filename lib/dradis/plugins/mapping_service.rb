@@ -1,7 +1,7 @@
 module Dradis
   module Plugins
     class MappingService
-      attr_accessor :plugin, :rtp_id, :source, :templates_dir, :template_service
+      attr_accessor :plugin, :rtp_id, :source, :templates_dir
 
       def initialize(args = {})
         @plugin           = args.fetch(:plugin)
