@@ -83,7 +83,7 @@ module Dradis
 
         def default_mapping_service
           Dradis::Plugins::MappingService.new(
-            plugin: plugin,
+            integration: plugin,
             rtp_id: project.report_template_properties_id
           )
         end

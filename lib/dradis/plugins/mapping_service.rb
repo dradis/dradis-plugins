@@ -1,18 +1,19 @@
 module Dradis
   module Plugins
     class MappingService
-      attr_accessor :plugin, :rtp_id, :source, :templates_dir
+      attr_accessor :integration, :rtp_id, :source, :templates_dir
 
       def initialize(args = {})
-        @plugin           = args.fetch(:plugin)
-        @rtp_id           = args.fetch(:rtp_id)
-        @templates_dir    = args.fetch(:templates_dir, default_templates_dir)
+        @integration   = args.fetch(:integration)
+        @rtp_id        = args.fetch(:rtp_id, nil)
+        @templates_dir = args.fetch(:templates_dir, default_templates_dir)
       end
 
       def apply_mapping(args = {})
         @source            = args[:source]
         data               = args[:data]
-        field_processor    = plugin::FieldProcessor.new(data: data)
+        field_processor    = integration::FieldProcessor.new(data: data)
+        mapping_fields     = args[:mapping_fields] || get_mapping_fields
 
         mapping_fields.map do |field|
           field_name = field.try(:destination_field) || field[0]
@@ -27,9 +28,9 @@ module Dradis
 
       # This lists the fields defined by this plugin that can be used in the
       # mapping
-      def integration_fields
-        @integration_fields ||= {}
-        @integration_fields[source] ||= begin
+      def source_fields
+        @source_fields ||= {}
+        @source_fields[source] ||= begin
           fields_file = File.join(templates_dir, "#{source}.fields")
           File.readlines(fields_file).map(&:chomp)
         end
@@ -38,8 +39,8 @@ module Dradis
       # This returns a sample of valid entry for the Mappings Manager
       def sample
         @sample ||= {}
-        @sample[template] ||= begin
-          sample_file = File.join(templates_dir, "#{template}.sample")
+        @sample[source] ||= begin
+          sample_file = File.join(templates_dir, "#{source}.sample")
           File.read(sample_file)
         end
       end
@@ -50,13 +51,13 @@ module Dradis
       # for their templates.
       def default_templates_dir
         @default_templates_dir ||= begin
-          File.join(Configuration.paths_templates_plugins, plugin::meta[:name].to_s)
+          File.join(Configuration.paths_templates_plugins, integration::meta[:name].to_s)
         end
       end
 
-      def mapping_fields
+      def get_mapping_fields
         mapping = Mapping.includes(:mapping_fields).find_by(
-          component: plugin::Mapping.component_name,
+          component: integration::Mapping.component_name,
           source: source,
           destination: rtp_id ? "rtp_#{rtp_id}" : nil
         )
@@ -65,18 +66,18 @@ module Dradis
         if mapping && mapping.mapping_fields.any?
           mapping.mapping_fields
         else
-          plugin::Mapping.default_mapping[source]
+          integration::Mapping.default_mapping[source]
         end
       end
 
       def process_content(content, field_processor)
-        content.gsub(/{{\s?#{plugin::Mapping.component_name}\[(\S*?)\]\s?}}/) do |field|
+        content.gsub(/{{\s?#{integration::Mapping.component_name}\[(\S*?)\]\s?}}/) do |field|
           name = field.split(/\[|\]/)[1]
 
-          if integration_fields.include?(name)
+          if source_fields.include?(name)
             field_processor.value(field: name)
           else
-            "Field [#{field}] not recognized by the plugin"
+            "Field [#{field}] not recognized by the integration"
           end
         end
       end
