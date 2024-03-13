@@ -22,7 +22,7 @@ module Dradis
             field_processor
           )
 
-          "#[#{field_name.titleize}]#\n\n#{field_content}"
+          "#[#{field_name.titleize}]#\n#{field_content}"
         end&.join("\n\n")
       end
 
