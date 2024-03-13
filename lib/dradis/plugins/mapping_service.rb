@@ -1,7 +1,7 @@
 module Dradis
   module Plugins
     class MappingService
-      attr_accessor :integration, :rtp_id, :source, :templates_dir
+      attr_accessor :integration, :rtp_id, :source
 
       def initialize(args = {})
         @integration   = args.fetch(:integration)
@@ -30,18 +30,22 @@ module Dradis
       # mapping
       def source_fields
         @source_fields ||= {}
-        @source_fields[source] ||= begin
-          fields_file = File.join(templates_dir, "#{source}.fields")
-          File.readlines(fields_file).map(&:chomp)
+        if validate_source
+            @source_fields[source] ||= begin
+            fields_file = File.join(@templates_dir, "#{source}.fields")
+            File.readlines(fields_file).map(&:chomp)
+          end
         end
       end
 
       # This returns a sample of valid entry for the Mappings Manager
       def sample
         @sample ||= {}
-        @sample[source] ||= begin
-          sample_file = File.join(templates_dir, "#{source}.sample")
-          File.read(sample_file)
+        if validate_source
+            @sample[source] ||= begin
+            sample_file = File.join(@templates_dir, "#{source}.sample")
+            File.read(sample_file)
+          end
         end
       end
 
@@ -80,6 +84,15 @@ module Dradis
             "Field [#{field}] not recognized by the integration"
           end
         end
+      end
+
+      def validate_source
+        allowed_sources = integration::Mapping.default_mapping.keys
+        @source = if allowed_sources.include?(source)
+                    source
+                  else
+                    nil
+                  end
       end
     end
   end
