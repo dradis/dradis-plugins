@@ -57,7 +57,7 @@ module Dradis
 
       def get_mapping_fields
         mapping = Mapping.includes(:mapping_fields).find_by(
-          component: integration::Mapping.component_name,
+          component: integration::Engine.plugin_name.to_s,
           source: source,
           destination: rtp_id ? "rtp_#{rtp_id}" : nil
         )
@@ -71,7 +71,7 @@ module Dradis
       end
 
       def process_content(content, field_processor)
-        content.gsub(/{{\s?#{integration::Mapping.component_name}\[(\S*?)\]\s?}}/) do |field|
+        content.gsub(/{{\s?#{integration::Engine.plugin_name.to_s}\[(\S*?)\]\s?}}/) do |field|
           name = field.split(/\[|\]/)[1]
 
           if source_fields.include?(name)
