@@ -10,7 +10,7 @@ module Dradis
       end
 
       def apply_mapping(args = {})
-        @source            = args[:source]
+        @source            = args[:source] || source
         data               = args[:data]
         field_processor    = integration::FieldProcessor.new(data: data)
         mapping_fields     = args[:mapping_fields] || get_mapping_fields
@@ -22,7 +22,7 @@ module Dradis
             field_processor
           )
 
-          "#[#{field_name.titleize}]#\n#{field_content}"
+          "#[#{field_name}]#\n#{field_content}"
         end&.join("\n\n")
       end
 
