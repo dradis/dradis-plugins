@@ -70,7 +70,7 @@ module Dradis
         if mapping && mapping.mapping_fields.any?
           mapping.mapping_fields
         else
-          integration::Mapping.default_mapping[source]
+          integration::Mapping::DEFAULT_MAPPING[source.to_sym]
         end
       end
 
@@ -87,7 +87,7 @@ module Dradis
       end
 
       def validate_source
-        allowed_sources = integration::Mapping.default_mapping.keys
+        allowed_sources = integration::Mapping::DEFAULT_MAPPING.keys.map(&:to_s)
         @source = if allowed_sources.include?(source)
                     source
                   else
