@@ -75,7 +75,6 @@ require 'dradis/plugins/version'
 
 require 'dradis/plugins/content_service/base'
 require 'dradis/plugins/mapping_service'
-require 'dradis/plugins/template_service'
 
 require 'dradis/plugins/base'
 require 'dradis/plugins/export'
