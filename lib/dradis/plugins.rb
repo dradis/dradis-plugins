@@ -57,6 +57,16 @@ module Dradis
         @@extensions.include?(const)
       end
 
+      def upload_integration_names_and_modules
+        with_feature(:upload).each_with_object({}) do |integration, integrations_hash|
+          integration_name = integration.plugin_name.to_s
+          integration_module =
+            integration.to_s[0..integration.to_s.rindex('::') - 1].constantize
+
+          integrations_hash[integration_name] = integration_module
+        end
+      end
+
       private
 
       # Use this to ensure the Extension conforms with some expected interface
@@ -74,7 +84,7 @@ require 'dradis/plugins/engine'
 require 'dradis/plugins/version'
 
 require 'dradis/plugins/content_service/base'
-require 'dradis/plugins/template_service'
+require 'dradis/plugins/mapping_service'
 
 require 'dradis/plugins/base'
 require 'dradis/plugins/export'

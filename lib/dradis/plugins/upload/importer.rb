@@ -9,11 +9,11 @@ module Dradis
           :content_service,
           :default_user_id,
           :logger,
+          :mapping_service,
           :options,
           :plugin,
           :project,
           :state,
-          :template_service
         )
 
         def self.templates
@@ -29,8 +29,8 @@ module Dradis
           @project = args.key?(:project_id) ? Project.find(args[:project_id]) : nil
           @state = args.fetch(:state, :published)
 
-          @content_service  = args.fetch(:content_service, default_content_service)
-          @template_service = args.fetch(:template_service, default_template_service)
+          @content_service   = args.fetch(:content_service, default_content_service)
+          @mapping_service   = default_mapping_service
 
           post_initialize(args)
         end
@@ -71,11 +71,10 @@ module Dradis
           end
         end
 
-
-        def default_template_service
-          @template ||= Dradis::Plugins::TemplateService.new(
-            logger: logger,
-            plugin: plugin
+        def default_mapping_service
+          Dradis::Plugins::MappingService.new(
+            integration: plugin,
+            rtp_id: project.report_template_properties_id
           )
         end
       end # Importer
