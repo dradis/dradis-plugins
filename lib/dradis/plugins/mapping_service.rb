@@ -1,19 +1,20 @@
 module Dradis
   module Plugins
     class MappingService
-      attr_accessor :integration, :rtp_id, :source
+      attr_accessor :component, :destination, :integration, :source
 
-      def initialize(args = {})
-        @integration   = args.fetch(:integration)
-        @rtp_id        = args.fetch(:rtp_id, nil)
-        @templates_dir = args.fetch(:templates_dir, default_templates_dir)
+      def initialize(component, args = {})
+        @component = component
+        @destination = args[:destination]
+        @templates_dir = args[:templates_dir] || default_templates_dir
+        @integration = upload_integration_names_and_modules[component]
       end
 
       def apply_mapping(args = {})
-        @source            = args[:source] || source
-        data               = args[:data]
-        field_processor    = integration::FieldProcessor.new(data: data)
-        mapping_fields     = args[:mapping_fields] || get_mapping_fields
+        @source = args[:source] || source
+        data = args[:data]
+        field_processor = integration::FieldProcessor.new(data: data)
+        mapping_fields = args[:mapping_fields] || get_mapping_fields
 
         mapping_fields.map do |field|
           field_name = field.try(:destination_field) || field[0]
@@ -61,9 +62,9 @@ module Dradis
 
       def get_mapping_fields
         mapping = Mapping.includes(:mapping_fields).find_by(
-          component: integration::Engine.plugin_name.to_s,
+          component: component,
           source: source,
-          destination: rtp_id ? "rtp_#{rtp_id}" : nil
+          destination: destination
         )
 
         # fetch mapping_fields through mapping or default
@@ -75,7 +76,7 @@ module Dradis
       end
 
       def process_content(content, field_processor)
-        content.gsub(/{{\s?#{integration::Engine.plugin_name.to_s}\[(\S*?)\]\s?}}/) do |field|
+        content.gsub(/{{\s?#{component}\[(\S*?)\]\s?}}/) do |field|
           name = field.split(/\[|\]/)[1]
 
           if source_fields.include?(name)

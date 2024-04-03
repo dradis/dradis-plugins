@@ -60,8 +60,7 @@ module Dradis
       def upload_integration_names_and_modules
         with_feature(:upload).each_with_object({}) do |integration, integrations_hash|
           integration_name = integration.plugin_name.to_s
-          integration_module =
-            integration.to_s[0..integration.to_s.rindex('::') - 1].constantize
+          integration_module = integration.name.deconstantize.constantize
 
           integrations_hash[integration_name] = integration_module
         end

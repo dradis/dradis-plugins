@@ -72,9 +72,12 @@ module Dradis
         end
 
         def default_mapping_service
+          rtp_id = project.report_template_properties_id
+          destination = rtp_id ? "rtp_#{rtp_id}" : nil
+
           Dradis::Plugins::MappingService.new(
-            integration: plugin,
-            rtp_id: project.report_template_properties_id
+            component: plugin.plugin_name.to_s,
+            destination: destination
           )
         end
       end # Importer
