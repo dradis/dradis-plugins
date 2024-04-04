@@ -3,15 +3,16 @@ module Dradis
     class MappingService
       attr_accessor :component, :destination, :integration, :source
 
-      def initialize(component, args = {})
+      def initialize(component, integration, args = {})
         @component = component
+        @integration = integration
         @destination = args[:destination]
-        @templates_dir = args[:templates_dir] || default_templates_dir
-        @integration = upload_integration_names_and_modules[component]
+        @sample_dir = args[:sample_dir] || default_sample_dir
       end
 
       def apply_mapping(args = {})
         @source = args[:source] || source
+        return unless validate_source
         data = args[:data]
         field_processor = integration::FieldProcessor.new(data: data)
         mapping_fields = args[:mapping_fields] || get_mapping_fields
@@ -27,18 +28,6 @@ module Dradis
         end&.join("\n\n")
       end
 
-      # This lists the fields defined by this plugin that can be used in the
-      # mapping
-      def source_fields
-        @source_fields ||= {}
-        if validate_source
-            @source_fields[source] ||= begin
-            fields_file = File.join(@templates_dir, "#{source}.fields")
-            File.readlines(fields_file).map(&:chomp)
-          end
-        end
-      end
-
       # This returns a sample of valid entry for the Mappings Manager
       def sample
         @sample ||= {}
@@ -52,11 +41,10 @@ module Dradis
 
       private
 
-      # This method returns the default location in which plugins should look
-      # for their templates.
-      def default_templates_dir
-        @default_templates_dir ||= begin
-          File.join(Configuration.paths_templates_plugins, integration::meta[:name].to_s)
+      # This method returns the default location in which integrations store their sample files
+      def default_sample_dir
+        @default_sample_dir ||= begin
+          File.join(Configuration.paths_templates_plugins, component)
         end
       end
 
@@ -71,7 +59,7 @@ module Dradis
         if mapping && mapping.mapping_fields.any?
           mapping.mapping_fields
         else
-          integration::Mapping::DEFAULT_MAPPING[source.to_sym]
+          integration::Mapping.default_mapping(source)
         end
       end
 
@@ -88,12 +76,7 @@ module Dradis
       end
 
       def validate_source
-        allowed_sources = integration::Mapping::DEFAULT_MAPPING.keys.map(&:to_s)
-        @source = if allowed_sources.include?(source)
-                    source
-                  else
-                    nil
-                  end
+        @source = source if integration::Mapping::SOURCES.include?(source)
       end
     end
   end
