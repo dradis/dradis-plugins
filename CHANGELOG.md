@@ -1,4 +1,5 @@
 v4.12.0 (XXXX 2024)
+  - Add preprovision initializer for app platforms
   - Update Dradis links in README
   - Fix the TypeError around the plugins template caching
 
