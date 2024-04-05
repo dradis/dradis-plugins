@@ -3,7 +3,7 @@ module Dradis
     module Templates
       extend ActiveSupport::Concern
 
-      LEGACY_FIELDS_REGEX = /%(\S+?)%/
+      LEGACY_FIELDS_REGEX = /%(\S+?)%/.freeze
       LEGACY_MAPPING_REFERENCE = {
         'burp' => {
           'html_evidence' => 'html_evidence',
@@ -19,7 +19,7 @@ module Dradis
           'was_evidence' => 'was-evidence',
           'was_issue' => 'was-issue'
         }
-      }
+      }.freeze
 
       included do
         # Keep track of any templates the plugin defines
@@ -27,7 +27,7 @@ module Dradis
       end
 
       module ClassMethods
-        def copy_templates(args={})
+        def copy_templates(args = {})
           destination = args.fetch(:to)
 
           destination_dir = File.join(destination, plugin_name.to_s)
@@ -47,16 +47,23 @@ module Dradis
         end
 
         def migrate_templates_to_mappings(args = {})
+          # return if the integration doesn't provide any templates ex. projects, cve
           return unless paths['dradis/templates'].existent.any?
-          templates_dir = args.fetch(:from)
-          @integration_templates_dir = File.join(templates_dir, plugin_name.to_s)
           @integration_name = plugin_name.to_s
+          # return if templates have already been migrated (mappings exist for the integration)
+          return if Mapping.where(component: @integration_name).any?
+
+          templates_dir = args.fetch(:from)
+          @integration_templates_dir = File.join(templates_dir, @integration_name)
 
           if uploaders.count > 1
             migrate_multiple_uploaders(@integration_name)
           else
             template_files = Dir["#{@integration_templates_dir}/*.template"]
+            return unless template_files.any?
+
             template_files.each do |template_file|
+              next unless File.exist?(template_file)
               source = File.basename(template_file, '.template')
               # create a mapping & mapping_fields for each field in the file
               migrate(template_file, source)
@@ -64,7 +71,7 @@ module Dradis
           end
         end
 
-        def plugin_templates(args={})
+        def plugin_templates(args = {})
           @templates ||= begin
             if paths['dradis/templates'].existent.any?
               Dir["#{paths['dradis/templates'].existent.first}/*"]
@@ -124,6 +131,8 @@ module Dradis
         # in order to migrate the old templates to the db with the new names as the source
         # we need to reference an object in the integration that maps the new name to the old one
         def migrate_multiple_uploaders(integration)
+          return unless LEGACY_MAPPING_REFERENCE[integration]
+
           LEGACY_MAPPING_REFERENCE[integration].each do |source_field, legacy_template_name|
             template_file = Dir["#{@integration_templates_dir}/#{legacy_template_name}.template*"]
             if template_file.any? { |file| File.exist?(file) }
@@ -145,16 +154,10 @@ module Dradis
           end
         end
 
-        # Normally we want to copy all templates so that the user always has
-        # the latest version.
-        #
-        # However, if it's a '.template' file, the user might have edited their
-        # local copy, and we don't want to override their changes.  So only
-        # copy .template files over if the user has no copy at all (i.e. if
-        # this is the first time they've started Dradis since this template was
-        # added.)
+        # Skip copying the file if it's a .template or a .fields file
+        # since we are no longer using files for these
         def skip?(file_path)
-          File.extname(file_path) == ".template" || File.extname(file_path) == ".fields"
+          File.exist?(file_path) && File.extname(file_path) != ".sample"
         end
       end
     end
