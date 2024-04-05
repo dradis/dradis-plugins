@@ -67,7 +67,7 @@ module Dradis
         content.gsub(/{{\s?#{component}\[(\S*?)\]\s?}}/) do |field|
           name = field.split(/\[|\]/)[1]
 
-          if source_fields.include?(name)
+          if integration.source_fields(source).include?(name)
             field_processor.value(field: name)
           else
             "Field [#{field}] not recognized by the integration"
