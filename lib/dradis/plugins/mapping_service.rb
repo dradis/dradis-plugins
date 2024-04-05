@@ -52,7 +52,6 @@ module Dradis
         # returns the mapping fields for the found mapping,
         # or the default if none is found
         integration.mapping_fields(
-          component: component,
           source: source,
           destination: destination
         )
