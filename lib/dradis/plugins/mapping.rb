@@ -15,5 +15,9 @@ module Dradis::Plugins::Mapping
     def mapping_sources
       self::Mapping::SOURCE_FIELDS.keys
     end
+
+    def source_fields(source)
+      self::Mapping::SOURCE_FIELDS[source.to_sym]
+    end
   end
 end
