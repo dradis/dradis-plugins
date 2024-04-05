@@ -33,7 +33,7 @@ module Dradis
         @sample ||= {}
         if validate_source
             @sample[source] ||= begin
-            sample_file = File.join(@templates_dir, "#{source}.sample")
+            sample_file = File.join(@sample_dir, "#{source}.sample")
             File.read(sample_file)
           end
         end
@@ -76,7 +76,7 @@ module Dradis
       end
 
       def validate_source
-        @source = source if integration.mapping_sources.include?(source)
+        @source = source if integration.mapping_sources.include?(source.to_sym)
       end
     end
   end
