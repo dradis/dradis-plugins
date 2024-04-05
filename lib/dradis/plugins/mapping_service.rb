@@ -3,9 +3,9 @@ module Dradis
     class MappingService
       attr_accessor :component, :destination, :integration, :source
 
-      def initialize(component, integration, args = {})
-        @component = component
-        @integration = integration
+      def initialize(args = {})
+        @component = args[:component]
+        @integration = args[:integration]
         @destination = args[:destination]
         @sample_dir = args[:sample_dir] || default_sample_dir
       end
@@ -59,7 +59,7 @@ module Dradis
         if mapping && mapping.mapping_fields.any?
           mapping.mapping_fields
         else
-          integration::Mapping.default_mapping(source)
+          integration.default_mapping(source)
         end
       end
 
@@ -76,7 +76,7 @@ module Dradis
       end
 
       def validate_source
-        @source = source if integration::Mapping::SOURCES.include?(source)
+        @source = source if integration.mapping_sources.include?(source)
       end
     end
   end

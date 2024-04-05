@@ -88,6 +88,7 @@ require 'dradis/plugins/mapping_service'
 require 'dradis/plugins/base'
 require 'dradis/plugins/export'
 require 'dradis/plugins/import'
+require 'dradis/plugins/mapping'
 require 'dradis/plugins/upload'
 
 # Common functionality

@@ -76,8 +76,8 @@ module Dradis
           destination = rtp_id ? "rtp_#{rtp_id}" : nil
 
           Dradis::Plugins::MappingService.new(
-            plugin.plugin_name.to_s,
-            plugin,
+            component: plugin.plugin_name.to_s,
+            integration: plugin,
             destination: destination
           )
         end
