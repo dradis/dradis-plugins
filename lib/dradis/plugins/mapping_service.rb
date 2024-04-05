@@ -49,18 +49,13 @@ module Dradis
       end
 
       def get_mapping_fields
-        mapping = Mapping.includes(:mapping_fields).find_by(
+        # returns the mapping fields for the found mapping,
+        # or the default if none is found
+        integration.mapping_fields(
           component: component,
           source: source,
           destination: destination
         )
-
-        # fetch mapping_fields through mapping or default
-        if mapping && mapping.mapping_fields.any?
-          mapping.mapping_fields
-        else
-          integration.default_mapping(source)
-        end
       end
 
       def process_content(content, field_processor)
