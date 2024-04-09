@@ -54,12 +54,12 @@ module Dradis
           return if ::Mapping.where(component: @integration_name).any?
 
           templates_dir = args.fetch(:from)
-          @integration_templates_dir = File.join(templates_dir, @integration_name)
+          integration_templates_dir = File.join(templates_dir, @integration_name)
 
           if uploaders.count > 1
-            migrate_multiple_uploaders(@integration_name)
+            migrate_multiple_uploaders(@integration_name, integration_templates_dir)
           else
-            template_files = Dir["#{@integration_templates_dir}/*.template"]
+            template_files = Dir["#{integration_templates_dir}/*.template"]
             return unless template_files.any?
 
             template_files.each do |template_file|
@@ -128,11 +128,11 @@ module Dradis
         # they have been renamed to follow a consistent 'uploader_entity' structure, but
         # in order to migrate the old templates to the db with the new names as the source
         # we need to reference an object in the integration that maps the new name to the old one
-        def migrate_multiple_uploaders(integration)
+        def migrate_multiple_uploaders(integration, templates_dir)
           return unless LEGACY_MAPPING_REFERENCE[integration]
 
           LEGACY_MAPPING_REFERENCE[integration].each do |source_field, legacy_template_name|
-            template_file = Dir["#{@integration_templates_dir}/#{legacy_template_name}.template*"]
+            template_file = Dir["#{templates_dir}/#{legacy_template_name}.template*"]
             if template_file.any? { |file| File.exist?(file) }
               migrate(template_file[0], source_field)
             end
