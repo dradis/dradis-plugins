@@ -14,36 +14,40 @@ module Dradis::Plugins::Mapping
     end
 
     def field_names(source:, destination: nil, field_type: 'destination')
-      mappings = Mapping.includes(:mapping_fields).where(component: component)
-      mappings = mappings.where(source: source) if source
-      mappings = mappings.where(destination: destination) if destination
+      mapping_fields = mapping_fields(source: source, destination: destination)
 
-      fields = mappings.pluck("mapping_fields.#{field_type}_field").uniq
+      return mapping_fields.keys if mapping_fields.class == Hash
 
-      if fields.empty? && source
-        default_mapping(source).keys
-      else
-        fields
-      end
+      mapping_fields.pluck("#{field_type}_field").uniq
     end
 
     def default_mapping(source)
       self::Mapping::DEFAULT_MAPPING[source.to_sym]
     end
 
-    def mapping(source:, destination:)
-      Mapping.includes(:mapping_fields).find_by(
+    def mappings(source:, destination: nil)
+      mappings = Mapping.includes(:mapping_fields).where(
         component: component,
         source: source,
-        destination: destination
       )
+      mappings = mappings.where(destination: destination) if destination
+
+      if mappings.any?
+        mappings
+      else
+        default_mapping(source)
+      end
     end
 
-    def mapping_fields(source:, destination:)
-      mapping = mapping(source, destination)
-      # fetch mapping_fields through mapping or default
-      if mapping && mapping.mapping_fields.any?
-        mapping.mapping_fields
+    def mapping_fields(source:, destination: nil)
+      mappings = mappings(source: source, destination: destination)
+
+      return mappings if mappings.class == Hash
+
+      fields = mappings.map(&:mapping_fields).flatten
+
+      if fields.any?
+        fields
       else
         default_mapping(source)
       end
