@@ -3,6 +3,8 @@ module Dradis
     module Templates
       extend ActiveSupport::Concern
 
+      # Apr 2024 migration to move from .template files
+      # to db-backed mappings. Can be removed in Apr 2026
       LEGACY_FIELDS_REGEX = /%(\S+?)%/.freeze
       LEGACY_MAPPING_REFERENCE = {
         'burp' => {
@@ -27,16 +29,14 @@ module Dradis
       end
 
       module ClassMethods
-        def copy_templates(args = {})
+        def copy_samples(args = {})
           destination = args.fetch(:to)
 
           destination_dir = File.join(destination, plugin_name.to_s)
-          FileUtils.mkdir_p(destination_dir) if plugin_templates.any?
+          FileUtils.mkdir_p(destination_dir) if integration_samples.any?
 
-          plugin_templates.each do |template|
+          integration_samples.each do |template|
             destination_file = File.join(destination_dir, File.basename(template))
-
-            next if skip?(destination_file)
 
             Rails.logger.info do
               "Updating templates for #{plugin_name} plugin. "\
@@ -51,7 +51,7 @@ module Dradis
           return unless paths['dradis/templates'].existent.any?
           @integration_name = plugin_name.to_s
           # return if templates have already been migrated (mappings exist for the integration)
-          return if Mapping.where(component: @integration_name).any?
+          return if ::Mapping.where(component: @integration_name).any?
 
           templates_dir = args.fetch(:from)
           @integration_templates_dir = File.join(templates_dir, @integration_name)
@@ -71,10 +71,10 @@ module Dradis
           end
         end
 
-        def plugin_templates(args = {})
+        def integration_samples(args = {})
           @templates ||= begin
             if paths['dradis/templates'].existent.any?
-              Dir["#{paths['dradis/templates'].existent.first}/*"]
+              Dir["#{paths['dradis/templates'].existent.first}/*.sample"]
             else
               []
             end
@@ -83,10 +83,10 @@ module Dradis
 
         private
 
-        def create_mapping(mapping_source)
-          destination = @rtp_id ? "rtp_#{@rtp_id}" : nil
+        def create_mapping(mapping_source, rtp_id = nil)
+          destination = rtp_id ? "rtp_#{rtp_id}" : nil
 
-          Mapping.find_or_create_by!(
+          ::Mapping.find_or_create_by!(
             component: @integration_name,
             source: mapping_source,
             destination: destination
@@ -100,7 +100,7 @@ module Dradis
           template_fields.each do |field_title, field_content|
             # set source_field by taking the first match to the existing %% syntax
             source_field = field_content.match(LEGACY_FIELDS_REGEX)
-            source_field = source_field ? source_field[1] : 'custom text'
+            source_field = source_field ? source_field[1] : 'Custom Text'
 
             updated_content = update_syntax(field_content)
 
@@ -115,10 +115,8 @@ module Dradis
         def migrate(template_file, source)
           rtp_ids = defined?(Dradis::Pro) ? ReportTemplateProperties.ids : [nil]
           rtp_ids.each do |rtp_id|
-            @rtp_id = rtp_id
-
             ActiveRecord::Base.transaction do
-              mapping = create_mapping(source)
+              mapping = create_mapping(source, rtp_id)
               create_mapping_fields(mapping, template_file)
             end
           end
@@ -152,12 +150,6 @@ module Dradis
           field_content.gsub(LEGACY_FIELDS_REGEX) do |content|
             "{{ #{@integration_name}[#{content[1..-2]}] }}"
           end
-        end
-
-        # Skip copying the file if it's a .template or a .fields file
-        # since we are no longer using files for these
-        def skip?(file_path)
-          File.exist?(file_path) && File.extname(file_path) != ".sample"
         end
       end
     end
