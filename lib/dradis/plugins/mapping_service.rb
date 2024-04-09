@@ -32,9 +32,11 @@ module Dradis
       def sample
         @sample ||= {}
         if validate_source
-            @sample[source] ||= begin
-            sample_file = File.join(@sample_dir, "#{source}.sample")
-            File.read(sample_file)
+          @sample[source] ||= begin
+            Rails.cache.fetch("files_cache.#{Dradis::Pro::VERSION::STRING}.integration_sample") do
+              sample_file = File.join(@sample_dir, "#{source}.sample")
+              File.read(sample_file)
+            end
           end
         end
       end
