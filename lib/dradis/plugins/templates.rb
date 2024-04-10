@@ -113,7 +113,8 @@ module Dradis
         end
 
         def migrate(template_file, source)
-          rtp_ids = defined?(Dradis::Pro) ? ReportTemplateProperties.ids : [nil]
+          rtp_ids = defined?(Dradis::Pro) ? ReportTemplateProperties.with_fields.pluck(:id) : [nil]
+
           rtp_ids.each do |rtp_id|
             ActiveRecord::Base.transaction do
               mapping = create_mapping(source, rtp_id)
