@@ -77,7 +77,7 @@ module Dradis
 
           Dradis::Plugins::MappingService.new(
             component: plugin.meta[:name].to_s,
-            integration: plugin,
+            integration_module: plugin,
             destination: destination
           )
         end

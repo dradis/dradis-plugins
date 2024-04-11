@@ -1,11 +1,11 @@
 module Dradis
   module Plugins
     class MappingService
-      attr_accessor :component, :destination, :integration, :source
+      attr_accessor :component, :destination, :integration_module, :source
 
       def initialize(args = {})
         @component = args[:component]
-        @integration = args[:integration]
+        @integration_module = args[:integration_module]
         @destination = args[:destination]
         @sample_dir = args[:sample_dir] || default_sample_dir
       end
@@ -14,7 +14,7 @@ module Dradis
         @source = args[:source] || source
         return unless validate_source
         data = args[:data]
-        field_processor = integration::FieldProcessor.new(data: data)
+        field_processor = integration_module::FieldProcessor.new(data: data)
         mapping_fields = args[:mapping_fields] || get_mapping_fields
 
         mapping_fields.map do |field|
@@ -53,7 +53,7 @@ module Dradis
       def get_mapping_fields
         # returns the mapping fields for the found mapping,
         # or the default if none is found
-        integration.mapping_fields(
+        integration_module.mapping_fields(
           source: source,
           destination: destination
         )
@@ -63,7 +63,7 @@ module Dradis
         content.gsub(/{{\s?#{component}\[(\S*?)\]\s?}}/) do |field|
           name = field.split(/\[|\]/)[1]
 
-          if integration.source_fields(source).include?(name)
+          if integration_module.source_fields(source).include?(name)
             field_processor.value(field: name)
           else
             "Field [#{field}] not recognized by the integration"
@@ -72,7 +72,7 @@ module Dradis
       end
 
       def validate_source
-        @source = source if integration.mapping_sources.include?(source.to_sym)
+        @source = source if integration_module.mapping_sources.include?(source.to_sym)
       end
     end
   end
