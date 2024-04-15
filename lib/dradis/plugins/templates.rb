@@ -71,16 +71,6 @@ module Dradis
           end
         end
 
-        def integration_samples(args = {})
-          @templates ||= begin
-            if paths['dradis/templates'].existent.any?
-              Dir["#{paths['dradis/templates'].existent.first}/*.sample"]
-            else
-              []
-            end
-          end
-        end
-
         private
 
         def create_mapping(mapping_source, rtp_id = nil)
@@ -112,6 +102,16 @@ module Dradis
           end
         end
 
+        def integration_samples(args = {})
+          @templates ||= begin
+            if paths['dradis/templates'].existent.any?
+              Dir["#{paths['dradis/templates'].existent.first}/*.sample"]
+            else
+              []
+            end
+          end
+        end
+
         def migrate(template_file, source)
           rtp_ids = defined?(Dradis::Pro) ? ReportTemplateProperties.with_fields.pluck(:id) : [nil]
 
@@ -121,7 +121,7 @@ module Dradis
               create_mapping_fields(mapping, template_file)
             end
           end
-          File.rename template_file, "#{template_file}.legacy"
+          rename_file(template_file)
         end
 
         # previously our integrations with multiple uploaders (Burp, Qualys) had inconsistent
@@ -143,6 +143,14 @@ module Dradis
         def parse_template_fields(template_file)
           template_content = File.read(template_file)
           FieldParser.source_to_fields(template_content)
+        end
+
+        def rename_file(template_file)
+          # Don't rename if it's already been renamed.
+          # Ex burp issue.template is used for both issue and evidence mapping
+          if !template_file.include?('.legacy') && File.file?(template_file)
+            File.rename template_file, "#{template_file}.legacy"
+          end
         end
 
         def update_syntax(field_content)
