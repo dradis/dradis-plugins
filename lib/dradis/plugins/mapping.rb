@@ -14,43 +14,57 @@ module Dradis::Plugins::Mapping
     end
 
     def field_names(source:, destination: nil, field_type: 'destination')
-      mapping_fields = mapping_fields(source: source, destination: destination)
+      mappings = mappings(source: source, destination: destination)
 
-      return mapping_fields.keys if mapping_fields.class == Hash
+      mapping_fields = if mappings.any?
+        mappings.map(&:mapping_fields).flatten
+      end
 
-      mapping_fields.pluck("#{field_type}_field").uniq
+      if mapping_fields && mapping_fields.any?
+        mapping_fields.pluck("#{field_type}_field").uniq
+      else
+        default_mapping(source).keys
+      end
     end
 
     def default_mapping(source)
-      self::Mapping::DEFAULT_MAPPING[source.to_sym]
+      if mapping_sources.include?(source.to_sym)
+        self::Mapping::DEFAULT_MAPPING[source.to_sym]
+      end
     end
 
-    def mappings(source:, destination: nil)
+    # given the params returns all matching mappings
+    # will accept source and/or destination or no args
+    def mappings(source: nil, destination: nil)
       mappings = Mapping.includes(:mapping_fields).where(
+        component: component
+      )
+      mappings = mappings.where(source: source) if source
+      mappings = mappings.where(destination: destination) if destination
+      mappings
+    end
+
+    # returns single matching mapping given source & destination or default
+    def mapping_or_default(source:, destination:)
+      mapping = Mapping.includes(:mapping_fields).find_by(
         component: component,
         source: source,
+        destination: destination
       )
-      mappings = mappings.where(destination: destination) if destination
-
-      if mappings.any?
-        mappings
+      if mapping
+        mapping
       else
         default_mapping(source)
       end
     end
 
-    def mapping_fields(source:, destination: nil)
-      mappings = mappings(source: source, destination: destination)
+    def mapping_fields(source:, destination:)
+      mapping = mapping_or_default(source: source, destination: destination)
 
-      return mappings if mappings.class == Hash
+      return mapping if mapping.class == Hash
+      return mapping.mapping_fields if mapping.mapping_fields.any?
 
-      fields = mappings.map(&:mapping_fields).flatten
-
-      if fields.any?
-        fields
-      else
-        default_mapping(source)
-      end
+      default_mapping(source)
     end
 
     def mapping_sources
