@@ -74,8 +74,8 @@ module Dradis
         if @sources.key?(template)
           # refresh cached version if modified since last read
           if template_mtime > @sources[template][:mtime]
-            @template[template][:mtime] = template_mtime
-            @template[template][:content] = File.read(template_file)
+            @sources[template][:mtime] = template_mtime
+            @sources[template][:content] = File.read(template_file)
           end
         else
           @sources[template] = {
