@@ -4,7 +4,7 @@ module Dradis::Plugins::ContentService
 
     def all_issues
       issues =
-        case scope.to_sym
+        case scope
         when :all
           project.issues
         when :published

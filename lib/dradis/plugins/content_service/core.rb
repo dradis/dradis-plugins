@@ -15,7 +15,7 @@ module Dradis::Plugins::ContentService
       @logger = args.fetch(:logger, Rails.logger)
       @plugin = args.fetch(:plugin)
       @project = args[:project]
-      @scope = args.fetch(:scope, :published)
+      @scope = args.fetch(:scope, :published).to_sym
       @state = args[:state]
     end
 
