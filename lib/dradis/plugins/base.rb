@@ -12,7 +12,8 @@ module Dradis
 
         # Extend the engine with other functionality
         include Dradis::Plugins::Configurable
-        include Dradis::Plugins::Templates
+        include Dradis::Plugins::Templates::MigrateTemplates
+        include Dradis::Plugins::Templates::Samples
         include Dradis::Plugins::Thor
       end
 
