@@ -9,6 +9,12 @@ module Dradis::Plugins::Mapping
 
   module ClassMethods
 
+    def default_mapping_fields(source)
+      default_mapping(source).map do |destination_field, content|
+        MappingField.new(destination_field: destination_field, content: content)
+      end
+    end
+
     def component
       meta[:name].to_s
     end
@@ -45,26 +51,22 @@ module Dradis::Plugins::Mapping
     end
 
     # returns single matching mapping given source & destination or default
-    def mapping_or_default(source:, destination:)
+    def get_mapping(source:, destination:)
       mapping = Mapping.includes(:mapping_fields).find_by(
         component: component,
         source: source,
         destination: destination
       )
-      if mapping
-        mapping
-      else
-        default_mapping(source)
-      end
     end
 
     def mapping_fields(source:, destination:)
-      mapping = mapping_or_default(source: source, destination: destination)
+      mapping = get_mapping(source: source, destination: destination)
 
-      return mapping if mapping.class == Hash
-      return mapping.mapping_fields if mapping.mapping_fields.any?
-
-      default_mapping(source)
+      if mapping
+        mapping.mapping_fields
+      else
+        default_mapping_fields(source)
+      end
     end
 
     def mapping_sources

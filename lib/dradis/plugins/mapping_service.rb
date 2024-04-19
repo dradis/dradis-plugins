@@ -15,12 +15,13 @@ module Dradis
         return unless validate_source
         data = args[:data]
         field_processor = integration_module::FieldProcessor.new(data: data)
+
         mapping_fields = args[:mapping_fields] || get_mapping_fields
 
         mapping_fields.map do |field|
-          field_name = field.try(:destination_field) || field[0]
+          field_name = field.destination_field
           field_content = process_content(
-            field.try(:content) || field[1],
+            field.content,
             field_processor
           )
 
@@ -52,7 +53,7 @@ module Dradis
 
       def get_mapping_fields
         # returns the mapping fields for the found mapping,
-        # or the default if none is found
+        # or the default mapping_fields
         integration_module.mapping_fields(
           source: source,
           destination: destination
