@@ -76,9 +76,8 @@ module Dradis
           destination = rtp_id ? "rtp_#{rtp_id}" : nil
 
           Dradis::Plugins::MappingService.new(
-            component: plugin.meta[:name].to_s,
-            integration_module: plugin,
-            destination: destination
+            destination: destination,
+            integration: plugin
           )
         end
       end # Importer
