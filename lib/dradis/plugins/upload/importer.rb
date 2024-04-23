@@ -72,8 +72,8 @@ module Dradis
         end
 
         def default_mapping_service
-          rtp_id = project.report_template_properties_id
-          destination = rtp_id ? "rtp_#{rtp_id}" : nil
+          rtp = project.report_template_properties
+          destination = rtp ? rtp.as_mapping_destination : nil
 
           Dradis::Plugins::MappingService.new(
             destination: destination,

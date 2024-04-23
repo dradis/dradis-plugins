@@ -53,9 +53,7 @@ module Dradis
 
           private
 
-          def create_mapping(mapping_source, rtp_id = nil)
-            destination = rtp_id ? "rtp_#{rtp_id}" : nil
-
+          def create_mapping(mapping_source, destination = nil)
             ::Mapping.find_or_create_by!(
               component: @integration_name,
               source: mapping_source,
@@ -65,6 +63,7 @@ module Dradis
 
           def create_mapping_fields(mapping, template_file)
             template_fields = parse_template_fields(template_file)
+            return unless template_fields
 
             # create a mapping_field for each field in the .template file
             template_fields.each do |field_title, field_content|
@@ -83,11 +82,15 @@ module Dradis
           end
 
           def migrate(template_file, source)
-            rtp_ids = defined?(Dradis::Pro) ? ReportTemplateProperties.with_fields.pluck(:id) : [nil]
+            destinations = if defined?(Dradis::Pro)
+              ReportTemplateProperties.with_fields_defined.map(&:as_mapping_destination)
+            else
+              [nil]
+            end
 
-            rtp_ids.each do |rtp_id|
+            destinations.each do |destination|
               ActiveRecord::Base.transaction do
-                mapping = create_mapping(source, rtp_id)
+                mapping = create_mapping(source, destination)
                 create_mapping_fields(mapping, template_file)
               end
             end
