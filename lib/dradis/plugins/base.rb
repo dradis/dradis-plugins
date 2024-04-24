@@ -34,7 +34,7 @@ module Dradis
           @features = list
           if list.include?(:upload)
             include Dradis::Plugins::Upload::Base
-            include Dradis::Plugins::Mapping
+            include Dradis::Plugins::Mappings::Base
           end
         end
 

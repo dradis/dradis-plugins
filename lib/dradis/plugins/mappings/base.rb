@@ -1,6 +1,6 @@
 
 # When you call provides :upload in your Engine, this module gets included.
-module Dradis::Plugins::Mapping
+module Dradis::Plugins::Mappings::Base
   extend ActiveSupport::Concern
 
   included do
@@ -74,7 +74,9 @@ module Dradis::Plugins::Mapping
     end
 
     def source_fields(source)
-      self::Mapping::SOURCE_FIELDS[source.to_sym]
+      if mapping_sources.include?(source.to_sym)
+        self::Mapping::SOURCE_FIELDS[source.to_sym]
+      end
     end
   end
 end
