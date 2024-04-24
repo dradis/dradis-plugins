@@ -15,7 +15,7 @@ module Dradis::Plugins::ContentService
       @logger = args.fetch(:logger, Rails.logger)
       @plugin = args.fetch(:plugin)
       @project = args[:project]
-      @scope = args.fetch(:scope, :published)
+      @scope = validate_scope(args[:scope]).to_sym
       @state = args[:state]
     end
 
@@ -51,5 +51,13 @@ module Dradis::Plugins::ContentService
       end
     end
 
+    def validate_scope(scope)
+      valid_scopes = Dradis::Plugins::ContentService::Base::VALID_SCOPES
+      if scope && valid_scopes.include?(scope.to_s)
+        scope
+      else
+        :published
+      end
+    end
   end
 end
