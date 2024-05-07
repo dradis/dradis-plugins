@@ -33,10 +33,8 @@ module Dradis
         @sample ||= {}
         if valid_source?
           @sample[source] ||= begin
-            Rails.cache.fetch("files_cache.#{Dradis::Pro::VERSION::STRING}.integration_sample") do
-              sample_file = File.join(@sample_dir, "#{source}.sample")
-              File.read(sample_file)
-            end
+            sample_file = File.join(@sample_dir, "#{source}.sample")
+            File.read(sample_file)
           end
         end
       end

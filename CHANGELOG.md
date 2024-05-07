@@ -1,4 +1,4 @@
-v4.12.0 (XXXX 2024)
+v4.12.0 (May 2024)
   - Update Dradis links in README
   - Fix the TypeError around the plugins template caching
   - Remove template_service and add mapping_service to apply mappings on tool upload

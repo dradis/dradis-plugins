@@ -47,6 +47,7 @@ module Dradis
                 source = File.basename(template_file, '.template')
                 # create a mapping & mapping_fields for each field in the file
                 migrate(template_file, source)
+                rename_file(template_file)
               end
             end
           end
@@ -94,7 +95,6 @@ module Dradis
                 create_mapping_fields(mapping, template_file)
               end
             end
-            rename_file(template_file)
           end
 
           # previously our integrations with multiple uploaders (Burp, Qualys) had inconsistent
@@ -106,9 +106,11 @@ module Dradis
             return unless LEGACY_MAPPING_REFERENCE[integration]
 
             LEGACY_MAPPING_REFERENCE[integration].each do |source_field, legacy_template_name|
-              template_file = Dir["#{templates_dir}/#{legacy_template_name}.template*"]
+              template_file = Dir["#{templates_dir}/#{legacy_template_name}.template"]
               if template_file.any? { |file| File.exist?(file) }
                 migrate(template_file[0], source_field)
+                # burp issue.template is used by both uploaders so don't rename it the first time around
+                rename_file(template_file[0]) unless source_field == 'html_issue'
               end
             end
           end
@@ -122,7 +124,6 @@ module Dradis
 
           def rename_file(template_file)
             # Don't rename if it's already been renamed.
-            # Ex burp issue.template is used for both issue and evidence mapping
             if !template_file.include?('.legacy') && File.file?(template_file)
               File.rename template_file, "#{template_file}.legacy"
             end
