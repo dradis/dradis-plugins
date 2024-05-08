@@ -72,7 +72,11 @@ module Dradis
               source_field = field_content.match(LEGACY_FIELDS_REGEX)
               source_field = source_field ? source_field[1] : 'Custom Text'
 
-              updated_content = update_syntax(field_content)
+              updated_content = if field_content.empty?
+                '!NO_CONTENT_DEFINED_FOR_THIS_FIELD_IN_MAPPINGS_MANAGER!'
+              else
+                update_syntax(field_content)
+              end
 
               mapping.mapping_fields.find_or_create_by!(
                 source_field: source_field,
