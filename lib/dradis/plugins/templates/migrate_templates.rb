@@ -73,7 +73,7 @@ module Dradis
               source_field = source_field ? source_field[1] : 'Custom Text'
 
               updated_content = if field_content.empty?
-                "!NO_CONTENT_DEFINED_FOR_THIS_FIELD_IN_MAPPINGS_MANAGER!"
+                '!NO_CONTENT_DEFINED_FOR_THIS_FIELD_IN_MAPPINGS_MANAGER!'
               else
                 update_syntax(field_content)
               end
