@@ -1,3 +1,6 @@
+v4.12.2 (June 2024)
+  - Do not migrate templates to mappings unless mappings table has been created
+
 v4.12.0 (May 2024)
   - Update Dradis links in README
   - Fix the TypeError around the plugins template caching
