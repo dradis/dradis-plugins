@@ -27,6 +27,7 @@ module Dradis
 
         module ClassMethods
           def migrate_templates_to_mappings(args = {})
+            return unless ::Mapping.table_exists?
             # return if the integration doesn't provide any templates ex. projects, cve
             return unless paths['dradis/templates'].existent.any?
             @integration_name = plugin_name.to_s
