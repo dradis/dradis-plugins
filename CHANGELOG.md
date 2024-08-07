@@ -1,3 +1,6 @@
+v4.13.0 (July 2024)
+  - No changes
+
 v4.12.0 (May 2024)
   - Update Dradis links in README
   - Fix the TypeError around the plugins template caching
