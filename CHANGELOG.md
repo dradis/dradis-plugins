@@ -1,3 +1,6 @@
+v4.14.0 (Month 2024)
+  - Add `callback` attribute for the Dradis::Plugins::Import::Result
+
 v4.13.0 (July 2024)
   - No changes
 
