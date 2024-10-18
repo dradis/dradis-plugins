@@ -20,6 +20,16 @@ module Dradis::Plugins::Mappings::Base
     end
 
     def field_names(source:, destination: nil, field_type: 'destination')
+      if source.is_a?(Array)
+        source.map do |s|
+          get_field_names(source: s, destination: destination, field_type: field_type)
+        end.flatten.uniq
+      else
+        get_field_names(source: source, destination: destination, field_type: field_type)
+      end
+    end
+
+    def get_field_names(source:, destination: nil, field_type: 'destination')
       mappings = mappings(source: source, destination: destination)
 
       mapping_fields = if mappings.any?
