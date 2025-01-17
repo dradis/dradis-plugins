@@ -9,11 +9,11 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def exists?(key)
-      Configuration.exists?(name: namespaced_key(key))
+      db_ready && Configuration.exists?(name: namespaced_key(key))
     end
 
     def read(key)
-      Configuration.find_by(name: namespaced_key(key))&.value
+      db_ready && Configuration.find_by(name: namespaced_key(key))&.value
     end
 
     def write(key, value)
@@ -25,6 +25,10 @@ module Dradis::Plugins::Settings::Adapters
 
     def namespaced_key(key)
       [@namespace, key.to_s.underscore].join(':')
+    end
+
+    def db_ready
+      (ActiveRecord::Base.connection rescue false) && Configuration.table_exists?
     end
   end
 end
