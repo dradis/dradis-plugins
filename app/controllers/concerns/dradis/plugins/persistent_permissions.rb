@@ -9,7 +9,7 @@ module Dradis
         Permission.transaction do
           Permission.where(component: self.class.component_name, user_id: params[:id]).destroy_all
 
-          permissions_params[:permissions]&.each do |permission|
+          permission_params[:permissions]&.each do |permission|
             # Validate the permission being created is a valid value
             next unless self.class.permissions_validation.call(permission) if self.class.permissions_validation
 
@@ -26,7 +26,7 @@ module Dradis
 
       private
 
-      def permissions_params
+      def permission_params
         params.require(self.class.component_name).permit(permissions: [])
       end
 
