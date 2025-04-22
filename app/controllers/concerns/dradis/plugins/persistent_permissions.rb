@@ -3,6 +3,8 @@ module Dradis
     module PersistentPermissions
       extend ActiveSupport::Concern
 
+      include UsageTracking
+
       def update
         @user = User.authors.find(params[:id])
 
@@ -21,10 +23,16 @@ module Dradis
           end
         end
 
+        track_usage(event_name, { id: params[:id], params: permission_params })
+
         redirect_to main_app.edit_admin_user_permissions_path(params[:id]), notice: "#{@user.name}'s permissions have been updated."
       end
 
       private
+
+      def event_name
+        "#{self.class.component_name}_permissions.updated"
+      end
 
       def permission_params
         params.require(self.class.component_name).permit(permissions: [])
