@@ -12,7 +12,8 @@ module Dradis
 
         # Extend the engine with other functionality
         include Dradis::Plugins::Configurable
-        include Dradis::Plugins::Templates
+        include Dradis::Plugins::Templates::MigrateTemplates
+        include Dradis::Plugins::Templates::Samples
         include Dradis::Plugins::Thor
       end
 
@@ -33,6 +34,7 @@ module Dradis
           @features = list
           if list.include?(:upload)
             include Dradis::Plugins::Upload::Base
+            include Dradis::Plugins::Mappings::Base
           end
         end
 
