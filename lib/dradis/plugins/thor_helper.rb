@@ -9,20 +9,28 @@ module Dradis
       end
 
       def task_options
-        @task_options ||= { logger: logger, state: :draft }
+        @task_options ||= { logger: logger, state: detect_state }
       end
 
       def logger
         @logger ||= default_logger
       end
 
-
       private
+
       def default_logger
         STDOUT.sync   = true
         logger        = Logger.new(STDOUT)
         logger.level  = Logger::DEBUG
         logger
+      end
+
+      def detect_state
+        if options.state && Upload::Importer::VALID_STATES.include?(options.state)
+          options.state.to_sym
+        else
+          :draft
+        end
       end
     end
   end
