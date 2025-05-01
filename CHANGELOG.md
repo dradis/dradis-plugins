@@ -1,4 +1,4 @@
-v4.16.0 (Month 2025)
+v4.16.0 (May 2025)
   - Enable audit tracking for persistent permissions changes
   - Default to draft state on tool upload
 
