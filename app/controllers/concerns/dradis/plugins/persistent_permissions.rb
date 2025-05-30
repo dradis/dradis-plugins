@@ -3,7 +3,7 @@ module Dradis
     module PersistentPermissions
       extend ActiveSupport::Concern
 
-      include UsageTracking
+      include UsageTracking if defined?(Dradis::Pro)
 
       def update
         @user = User.authors.find(params[:id])
