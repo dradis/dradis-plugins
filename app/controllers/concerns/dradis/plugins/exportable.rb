@@ -11,13 +11,12 @@ module Dradis
 
       private
 
-      def validate_template
-        @template_file =
-          File.expand_path(File.join(templates_dir, export_params[:template]))
+      def set_exporter
+        raise NotImplementedError
+      end
 
-        unless @template_file.starts_with?(templates_dir) && File.exists?(@template_file)
-          raise 'Something fishy is going on...'
-        end
+      def templates_dir
+        @templates_dir ||= File.join(::Configuration::paths_templates_reports, @exporter)
       end
 
       def validate_scope
@@ -26,12 +25,13 @@ module Dradis
         end
       end
 
-      def set_exporter
-        raise NotImplementedError
-      end
+      def validate_template
+        @template_file =
+          File.expand_path(File.join(templates_dir, export_params[:template]))
 
-      def templates_dir
-        @templates_dir ||= File.join(::Configuration::paths_templates_reports, @exporter)
+        unless @template_file.starts_with?(templates_dir) && File.exists?(@template_file)
+          raise 'Something fishy is going on...'
+        end
       end
     end
   end
