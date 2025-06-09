@@ -25,7 +25,6 @@ module Dradis
 
       def validate_scope
         unless Dradis::Plugins::ContentService::Base::VALID_SCOPES.include?(export_params[:scope])
-          byebug
           if is_api?
             render_json_error(Exception.new('Something fishy is going ontress...'), 422)
           else
