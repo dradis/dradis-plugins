@@ -26,7 +26,7 @@ module Dradis
       def validate_scope
         unless Dradis::Plugins::ContentService::Base::VALID_SCOPES.include?(export_params[:scope])
           if is_api?
-            render_json_error(Exception.new('Something fishy is going ontress...'), 422)
+            render_json_error(Exception.new('Something fishy is going on...'), 422)
           else
             raise 'Something fishy is going on...'
           end
@@ -45,5 +45,6 @@ module Dradis
           end
         end
       end
+    end
   end
 end
