@@ -1,3 +1,6 @@
+v4.X.X (Month 2025)
+  - Add Exportable concern to house shared report export logic from Export::BaseController
+
 v4.16.0 (May 2025)
   - Enable audit tracking for persistent permissions changes
   - Default to draft state on tool upload
