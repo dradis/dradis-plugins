@@ -6,7 +6,7 @@ module Dradis
         include ProjectScoped
         include UsageTracking if defined?(Dradis::Pro)
 
-        after_action :track_export, if: -> { defined?(Dradis::Pro) }
+        after_action :track_export, only: [:create], if: -> { defined?(Dradis::Pro) }
 
         protected
 
