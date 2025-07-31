@@ -37,7 +37,7 @@ module Dradis
         @template_file =
           File.expand_path(File.join(templates_dir, export_params[:template]))
 
-        unless @template_file.starts_with?(templates_dir) && File.exists?(@template_file)
+        unless @template_file.starts_with?(templates_dir) && File.exist?(@template_file)
           if is_api?
             render_json_error(Exception.new('Something fishy is going on...'), 422)
           else
