@@ -17,6 +17,21 @@ module Dradis::Plugins::ContentService
       nodes.sort_by! { |node| node.label.split('.').map(&:to_i) }
     end
 
+    # This method returns a list of nodes associated with Evidence
+    # instances. When a node is affected by multiple issues, or multiple pieces
+    # of evidence, we just want a single reference to it.
+    #
+    # Returns and Array with a unique collection of Nodes.
+    def nodes_from_evidence
+      all_issues.
+        includes(:evidence, evidence: :node).
+        collect(&:evidence).
+        # Each Issue can have 0, 1 or more Evidence
+        map { |evidence_collection| evidence_collection.collect(&:node) }.
+        flatten.
+        uniq
+    end
+
     def create_node(args={})
       label  = args[:label]  || default_node_label
       parent = args[:parent] || default_node_parent
@@ -57,22 +72,6 @@ module Dradis::Plugins::ContentService
 
     def default_node_type
       @default_node_type ||= Node::Types::DEFAULT
-    end
-
-
-    # Private: this method returns a list of nodes associated with Evidence
-    # instances. When a node is affected by multiple issues, or multiple pieces
-    # of evidence, we just want a single reference to it.
-    #
-    # Returns and Array with a unique collection of Nodes.
-    def nodes_from_evidence
-      all_issues.
-        includes(:evidence, evidence: :node).
-        collect(&:evidence).
-        # Each Issue can have 0, 1 or more Evidence
-        map { |evidence_collection| evidence_collection.collect(&:node) }.
-        flatten.
-        uniq
     end
 
     # Private: this method returns a list of nodes in the project that have some
