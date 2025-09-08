@@ -17,6 +17,7 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def write(key, value)
+      return unless db_ready?
       db_setting = Configuration.find_or_create_by(name: namespaced_key(key))
       db_setting.update_attribute(:value, value)
     end
