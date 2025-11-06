@@ -7,7 +7,7 @@ module Dradis::Plugins::Import
       @id          = args[:id]          || "The Import plugin didn't provide an :id for this result."
       @tags        = args[:tags]        || []
       @title       = args[:title]       || "The Import plugin didn't provide a :title for this result."
-      @state       = args[:state]       || "The Import plugin didn't provide a :state for this result."
+      @state       = args[:state]       || nil
     end
   end
 end
