@@ -1,7 +1,6 @@
 module Dradis
   module Plugins
     module Import
-
       module Filters
         class << self
           # -- Class Methods --------------------------------------------------------
@@ -45,7 +44,6 @@ module Dradis
           end
         end
       end
-
     end
   end
 end

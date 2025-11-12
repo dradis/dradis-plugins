@@ -20,7 +20,7 @@ module Dradis::Plugins
           value: value = dirty_or_stored_or_default(key.to_sym),
           default: is_default?(key, value)
         }
-      end.sort_by{ |o| o[:name] }
+      end.sort_by { |o| o[:name] }
     end
 
     def save
@@ -32,7 +32,7 @@ module Dradis::Plugins
     end
 
     def update_settings(opts = {})
-      opts.select{ |k, v| @default_options.key?(k) }.each do |k, v|
+      opts.select { |k, v| @default_options.key?(k) }.each do |k, v|
         @dirty_options[k.to_sym] = v
       end
       save

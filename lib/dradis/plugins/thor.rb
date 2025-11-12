@@ -17,9 +17,9 @@ module Dradis
           end
         end
 
-        def plugin_thorfiles(args={})
+        def plugin_thorfiles(args = {})
           if paths['dradis/thorfiles'].existent.any?
-            Dir["%s/thorfile.rb" % paths['dradis/thorfiles'].existent]
+            Dir['%s/thorfile.rb' % paths['dradis/thorfiles'].existent]
           else
             []
           end
