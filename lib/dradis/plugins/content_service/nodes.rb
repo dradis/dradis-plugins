@@ -17,7 +17,7 @@ module Dradis::Plugins::ContentService
       nodes.sort_by! { |node| node.label.split('.').map(&:to_i) }
     end
 
-    def create_node(args={})
+    def create_node(args = {})
       label  = args[:label]  || default_node_label
       parent = args[:parent] || default_node_parent
 
@@ -58,7 +58,6 @@ module Dradis::Plugins::ContentService
     def default_node_type
       @default_node_type ||= Node::Types::DEFAULT
     end
-
 
     # Private: this method returns a list of nodes associated with Evidence
     # instances. When a node is affected by multiple issues, or multiple pieces

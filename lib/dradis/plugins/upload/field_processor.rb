@@ -5,11 +5,10 @@
 module Dradis
   module Plugins
     module Upload
-
       class FieldProcessor
         attr_reader :data
 
-        def initialize(args={})
+        def initialize(args = {})
           @data = args[:data]
           post_initialize(args)
         end
@@ -18,18 +17,17 @@ module Dradis
         # and extract the value of the requested field.
         #
         # Subclasses will overwrite this method.
-        def value(args={})
+        def value(args = {})
           field = args[:field]
           "Sorry, this plugin doesn't define a FieldProcessor (called for [#{field}])"
         end
 
         protected
         # This can be overriden by subclasses
-        def post_initialize(args={})
+        def post_initialize(args = {})
           # nop
         end
       end
-
     end
   end
 end
