@@ -7,7 +7,7 @@ module Dradis
       class Base
         attr_accessor :content_service, :logger, :options, :plugin, :project, :scope
 
-        def initialize(args={})
+        def initialize(args = {})
           # Save everything just in case the implementing class needs any of it.
           @options = args
 
@@ -22,12 +22,12 @@ module Dradis
           post_initialize(args)
         end
 
-        def export(args={})
+        def export(args = {})
           raise "The export() method is not implemented in this plugin [#{self.class.name}]."
         end
 
         # This method can be overwriten by plugins to do initialization tasks.
-        def post_initialize(args={})
+        def post_initialize(args = {})
         end
 
         private
@@ -52,7 +52,6 @@ module Dradis
             raise "You need to pass a :plugin value to your Exporter or define it under your plugin's root namespace."
           end
         end
-
       end # Base
     end # Export
   end # Plugins

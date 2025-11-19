@@ -79,7 +79,6 @@ module Dradis
   end
 end
 
-
 require 'dradis/plugins/engine'
 require 'dradis/plugins/version'
 
