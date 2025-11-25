@@ -2,7 +2,7 @@ module Dradis::Plugins::ContentService
   module Evidence
     extend ActiveSupport::Concern
 
-    def create_evidence(args={})
+    def create_evidence(args = {})
       content = args.fetch(:content, default_evidence_content)
       node    = args.fetch(:node, default_node_parent)
       issue   = args[:issue] || default_evidence_issue

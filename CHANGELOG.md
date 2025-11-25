@@ -1,5 +1,5 @@
 v4.19.0 (November 2025)
-  - No changes
+  - Add state attribute to Result class
 
 v4.18.0 (September 2025)
   - Update File.exists? calls for ruby upgrade

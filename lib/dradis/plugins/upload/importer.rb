@@ -20,7 +20,7 @@ module Dradis
           { evidence: 'evidence', issue: 'issue' }
         end
 
-        def initialize(args={})
+        def initialize(args = {})
           @options = args
 
           @default_user_id = args[:default_user_id] || -1
@@ -35,12 +35,12 @@ module Dradis
           post_initialize(args)
         end
 
-        def import(args={})
+        def import(args = {})
           raise "The import() method is not implemented in this plugin [#{self.class.name}]."
         end
 
         # This method can be overwriten by plugins to do initialization tasks.
-        def post_initialize(args={})
+        def post_initialize(args = {})
         end
 
         private
@@ -81,7 +81,6 @@ module Dradis
           )
         end
       end # Importer
-
     end # Upload
   end # Plugins
 end # Core

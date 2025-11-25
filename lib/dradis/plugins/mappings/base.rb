@@ -8,7 +8,6 @@ module Dradis::Plugins::Mappings::Base
   end
 
   module ClassMethods
-
     def default_mapping_fields(source)
       default_mapping(source).map do |destination_field, content|
         MappingField.new(destination_field: destination_field, content: content)
