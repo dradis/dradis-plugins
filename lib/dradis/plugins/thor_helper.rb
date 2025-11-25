@@ -16,7 +16,6 @@ module Dradis
         @logger ||= default_logger
       end
 
-
       private
       def default_logger
         STDOUT.sync   = true

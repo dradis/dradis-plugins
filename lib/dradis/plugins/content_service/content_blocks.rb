@@ -13,7 +13,7 @@ module Dradis::Plugins::ContentService
       end
     end
 
-    def create_content_block(args={})
+    def create_content_block(args = {})
       block_group    = args.fetch(:block_group, default_content_block_group)
       content        = args.fetch(:content, default_content_block_content)
       state          = args.fetch(:state, :published)

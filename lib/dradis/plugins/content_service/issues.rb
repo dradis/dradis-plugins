@@ -16,7 +16,7 @@ module Dradis::Plugins::ContentService
       issues.where(category_id: default_issue_category.id)
     end
 
-    def create_issue(args={})
+    def create_issue(args = {})
       text = args.fetch(:text, default_issue_text)
       # NOTE that ID is the unique issue identifier assigned by the plugin,
       # and is not to be confused with the Issue#id primary key
@@ -87,7 +87,6 @@ module Dradis::Plugins::ContentService
         Hash[issues_map]
       end
     end
-
 
     private
 

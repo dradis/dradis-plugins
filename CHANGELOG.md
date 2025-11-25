@@ -1,4 +1,7 @@
-vX.X.X (Month 2025)
+v4.19.0 (November 2025)
+  - Add state attribute to Result class
+
+v4.18.0 (September 2025)
   - Update File.exists? calls for ruby upgrade
 
 v4.17.0 (July 2025)

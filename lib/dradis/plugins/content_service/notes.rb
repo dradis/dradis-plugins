@@ -6,7 +6,7 @@ module Dradis::Plugins::ContentService
       project.notes.where(category: Category.report)
     end
 
-    def create_note(args={})
+    def create_note(args = {})
       cat  = args.fetch(:category, default_note_category)
       node = args.fetch(:node, default_node_parent)
       text = args.fetch(:text, default_note_text)
