@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'rake'
   spec.add_development_dependency 'rspec-rails'
+  spec.add_development_dependency 'rubocop', '1.79.0'
 end

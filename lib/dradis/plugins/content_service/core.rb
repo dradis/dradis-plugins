@@ -11,7 +11,7 @@ module Dradis::Plugins::ContentService
 
     # @option plugin [Class] the 'wrapper' module of a plugin, e.g.
     #     Dradis::Plugins::Nessus
-    def initialize(args={})
+    def initialize(args = {})
       @logger = args.fetch(:logger, Rails.logger)
       @plugin = args.fetch(:plugin)
       @project = args[:project]
@@ -25,14 +25,14 @@ module Dradis::Plugins::ContentService
       @default_author ||= "#{plugin::Engine.plugin_name.to_s.humanize} upload plugin"
     end
 
-    def try_rescue_from_length_validation(args={})
+    def try_rescue_from_length_validation(args = {})
       model = args[:model]
       field = args[:field]
       text  = args[:text]
       msg   = args[:msg]
-      tail  = "..." + args[:tail].to_s
+      tail  = '...' + args[:tail].to_s
 
-      logger.error{ "Trying to rescue from a :length error" }
+      logger.error { 'Trying to rescue from a :length error' }
 
       if model.errors[field]
         # the plugin tried to store too much information

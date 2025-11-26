@@ -18,19 +18,19 @@ describe Dradis::Plugins::Settings do
     TestEngine::settings.reset_defaults!
   end
 
-  it "sets and return default values" do
+  it 'sets and return default values' do
     expect(TestEngine::settings.host).to eq('localhost')
     expect(TestEngine::settings.port).to eq(80)
   end
 
-  it "sets and returns user defined values" do
+  it 'sets and returns user defined values' do
     expect(TestEngine::settings.host).to eq('localhost')
     TestEngine::settings.host = '127.0.0.1'
     expect(TestEngine::settings.host).to eq('127.0.0.1')
     expect(TestEngine::settings.port).to eq(80)
   end
 
-  it "sets and returns new value even if it equals default value" do
+  it 'sets and returns new value even if it equals default value' do
     expect(TestEngine::settings.host).to eq('localhost')
     TestEngine::settings.host = '127.0.0.1'
     expect(TestEngine::settings.host).to eq('127.0.0.1')
@@ -38,17 +38,17 @@ describe Dradis::Plugins::Settings do
     expect(TestEngine::settings.host).to eq('localhost')
   end
 
-  it "saves to db and returns persisted values" do
+  it 'saves to db and returns persisted values' do
     expect(TestEngine::settings.host).to eq('localhost')
     TestEngine::settings.host = '127.0.0.1'
-    expect(TestEngine::settings.save).to eq( { host: '127.0.0.1'} )
+    expect(TestEngine::settings.save).to eq({ host: '127.0.0.1' })
     expect(TestEngine::settings.host).to eq('127.0.0.1')
   end
 
-  it "reads from db after saving" do
+  it 'reads from db after saving' do
     expect(TestEngine::settings.host).to eq('localhost')
     TestEngine::settings.host = '127.0.0.1'
-    expect(TestEngine::settings.save).to eq( { host: '127.0.0.1'} )
+    expect(TestEngine::settings.save).to eq({ host: '127.0.0.1' })
   end
 
 end
@@ -83,5 +83,3 @@ describe Dradis::Plugins::Settings, '#all' do
     ])
   end
 end
-
-
