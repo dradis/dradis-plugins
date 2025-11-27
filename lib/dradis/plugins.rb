@@ -22,8 +22,9 @@ module Dradis
 
       # Filters the list of plugins and only returns those that provide the
       # requested feature and enabled
-      def with_feature(feature)
-        enabled_list.select do |plugin|
+      def with_feature(feature, include_disabled: false)
+        integrations_list = include_disabled ? list : enabled_list
+        integrations_list.select do |plugin|
           # engine = "#{plugin}::Engine".constantize
           plugin.provides?(feature)
         end
