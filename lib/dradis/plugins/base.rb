@@ -44,7 +44,7 @@ module Dradis
 
         def enabled?
           # if db is ready, answer truthfully. If not, return false
-          db_ready ? ActiveRecord::Type::Boolean.new.cast(self.settings.enabled) : false
+          db_ready &&  ActiveRecord::Type::Boolean.new.cast(self.settings.enabled)
         end
 
         def enable!
