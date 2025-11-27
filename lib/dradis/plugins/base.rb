@@ -44,23 +44,23 @@ module Dradis
 
         def enabled?
           # if db is ready, answer truthfully. If not, return false
-          db_ready &&  ActiveRecord::Type::Boolean.new.cast(self.settings.enabled)
+          db_ready? &&  ActiveRecord::Type::Boolean.new.cast(self.settings.enabled)
         end
 
         def enable!
-          return unless db_ready
+          return unless db_ready?
           self.settings.update_settings(enabled: true)
           Dradis::Plugins::clear_enabled_list
         end
 
         def disable!
-          return unless db_ready
+          return unless db_ready?
           self.settings.update_settings(enabled: false)
           Dradis::Plugins::clear_enabled_list
         end
       end
 
-      def db_ready
+      def db_ready?
         (ActiveRecord::Base.connection.verify! rescue false) && Configuration.table_exists?
       end
     end
