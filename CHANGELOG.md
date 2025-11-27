@@ -1,6 +1,8 @@
+vX.X.X (Month 2026)
+  - Return false when checking Engine.enabled? if the db is not yet ready
+
 v4.19.0 (November 2025)
   - Add state attribute to Result class
-  - Return false when checking Engine.enabled? if the db is not yet ready
 
 v4.18.0 (September 2025)
   - Update File.exists? calls for ruby upgrade
