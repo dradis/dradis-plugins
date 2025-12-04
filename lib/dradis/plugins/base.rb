@@ -61,7 +61,7 @@ module Dradis
       end
 
       def db_ready?
-        (ActiveRecord::Base.connection.verify! rescue false) && Configuration.table_exists?
+        (ActiveRecord::Base.connection.verify! rescue false) && ::Configuration.table_exists?
       end
     end
   end
