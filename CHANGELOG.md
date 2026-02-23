@@ -1,5 +1,7 @@
 vX.X.X (Month 2026)
   - Return false when checking Engine.enabled? if the db is not yet ready
+  - Store encrypted configuration under `config/credentials/`
+  - Only create a key file if `RAILS_MASTER_KEY` environment variable is not set
 
 v4.19.0 (November 2025)
   - Add state attribute to Result class
