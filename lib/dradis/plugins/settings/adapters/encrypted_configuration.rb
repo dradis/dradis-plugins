@@ -32,13 +32,14 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     private
+
     def config_path
       @config_path ||= Rails.root.join('config', 'credentials', 'dradis-plugins.yml.enc')
     end
 
     def configuration
       @configuration ||= begin
-          create_key unless key_path.exist? || ENV.fetch('RAILS_MASTER_KEY', nil)
+          create_key unless key_path.exist?
 
           ActiveSupport::EncryptedConfiguration.new(
             config_path: config_path, key_path: key_path,
