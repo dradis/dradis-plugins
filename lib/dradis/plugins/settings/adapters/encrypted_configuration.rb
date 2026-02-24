@@ -39,7 +39,7 @@ module Dradis::Plugins::Settings::Adapters
 
     def configuration
       @configuration ||= begin
-          create_key unless key_path.exist?
+          create_key unless key_path.exist? || env.key?('DRADIS_PLUGINS_KEY')
 
           ActiveSupport::EncryptedConfiguration.new(
             config_path: config_path, key_path: key_path,
