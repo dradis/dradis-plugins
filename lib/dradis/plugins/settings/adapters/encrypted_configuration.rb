@@ -43,7 +43,7 @@ module Dradis::Plugins::Settings::Adapters
 
           ActiveSupport::EncryptedConfiguration.new(
             config_path: config_path, key_path: key_path,
-            env_key: 'RAILS_MASTER_KEY', raise_if_missing_key: true
+            env_key: 'DRADIS_PLUGINS_KEY', raise_if_missing_key: true
           )
         end
     end
