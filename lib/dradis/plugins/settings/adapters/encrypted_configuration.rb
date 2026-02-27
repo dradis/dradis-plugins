@@ -32,8 +32,9 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     private
+
     def config_path
-      @config_path ||= Rails.root.join('config', 'shared', 'dradis-plugins.yml.enc')
+      @config_path ||= Rails.root.join('config', 'credentials', 'dradis-plugins.yml.enc')
     end
 
     def configuration
@@ -41,8 +42,7 @@ module Dradis::Plugins::Settings::Adapters
           create_key unless key_path.exist?
 
           ActiveSupport::EncryptedConfiguration.new(
-            config_path: config_path, key_path: key_path,
-            env_key: 'RAILS_MASTER_KEY', raise_if_missing_key: true
+            config_path: config_path, key_path: key_path, raise_if_missing_key: true
           )
         end
     end
@@ -52,7 +52,7 @@ module Dradis::Plugins::Settings::Adapters
     end
 
     def key_path
-      @key_path ||= Rails.root.join('config', 'shared', 'dradis-plugins.key')
+      @key_path ||= Rails.root.join('config', 'credentials', 'dradis-plugins.key')
     end
   end
 end

@@ -1,5 +1,6 @@
 vX.X.X (Month 2026)
   - Return false when checking Engine.enabled? if the db is not yet ready
+  - Store encrypted configuration under `config/credentials/`
 
 v4.19.0 (November 2025)
   - Add state attribute to Result class
