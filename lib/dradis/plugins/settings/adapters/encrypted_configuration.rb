@@ -42,7 +42,7 @@ module Dradis::Plugins::Settings::Adapters
           create_key unless key_path.exist?
           # env_key is a no-op since we're always providing a key_path, but it is required by the initializer and we don't want to re-use RAILS_MASTER_KEY
           ActiveSupport::EncryptedConfiguration.new(
-            config_path: config_path, key_path: key_path, env_key: ENV["DRADIS_PLUGINS_KEY"], raise_if_missing_key: true
+            config_path: config_path, key_path: key_path, env_key: 'DRADIS_PLUGINS_KEY', raise_if_missing_key: true
           )
         end
     end
