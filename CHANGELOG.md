@@ -1,4 +1,4 @@
-vX.X.X (Month 2026)
+v5.0.0 (March 2026)
   - Return false when checking Engine.enabled? if the db is not yet ready
   - Store encrypted configuration under `config/credentials/`
 
