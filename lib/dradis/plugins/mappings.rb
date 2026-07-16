@@ -6,4 +6,4 @@ module Dradis
 end
 
 require 'dradis/plugins/mappings/base'
-require 'dradis/plugins/mappings/send_to/source'
+require 'dradis/plugins/mappings/ticketing/source'

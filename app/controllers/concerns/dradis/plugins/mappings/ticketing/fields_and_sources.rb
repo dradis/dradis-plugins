@@ -1,8 +1,8 @@
 module Dradis
   module Plugins
     module Mappings
-      module SendTo
-        # Shared by "send to" integrations' MappingsControllers (e.g. Jira,
+      module Ticketing
+        # Shared by ticketing integrations' MappingsControllers (e.g. Jira,
         # VSTS, ServiceNow) to list Dradis Report Templates as mapping
         # sources. Distinct from Dradis::Plugins::Mappings::Base, which
         # handles the opposite direction (mapping inbound upload data into
