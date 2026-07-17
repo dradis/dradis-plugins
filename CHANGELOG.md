@@ -1,3 +1,6 @@
+v5.3.0 (July 2026)
+  - Add shared report template source resolution for mappings across ticketing integrations (Jira, DevOps, ServiceNow)
+
 v5.2.0 (June 2026)
   - No changes
 
