@@ -34,9 +34,7 @@ module Dradis
         if valid_source?
           @sample[source] ||= begin
             sample_file = File.join(@sample_dir, "#{source}.sample")
-            # Integrations with dynamic sources (e.g. CSV) don't ship sample
-            # files, so degrade gracefully instead of raising.
-            File.exist?(sample_file) ? File.read(sample_file) : ''
+            File.read(sample_file)
           end
         end
       end
@@ -71,17 +69,16 @@ module Dradis
         end
       end
 
-      # Memoized per instance: integrations with database-backed sources
-      # (e.g. CSV) would otherwise trigger a query per field per entry when
-      # importing large files.
       def source_fields
-        @source_fields ||= {}
-        @source_fields[source] ||= integration.source_fields(source)
+        integration.source_fields(source)
       end
 
       def valid_source?
-        @valid_sources ||= integration.mapping_sources
-        @source = source if @valid_sources.include?(source.to_sym)
+        @source = source if valid_sources.include?(source.to_sym)
+      end
+
+      def valid_sources
+        integration.mapping_sources
       end
     end
   end
