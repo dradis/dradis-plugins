@@ -7,7 +7,6 @@ module Dradis
         @destination = destination
         @integration = integration
         @component = @integration.meta[:name].to_s
-        @sample_dir = default_sample_dir
       end
 
       def apply_mapping(data:, source:, mapping_fields: nil)
@@ -31,22 +30,10 @@ module Dradis
       # This returns a sample of valid entry for the Mappings Manager
       def sample
         @sample ||= {}
-        if valid_source?
-          @sample[source] ||= begin
-            sample_file = File.join(@sample_dir, "#{source}.sample")
-            File.read(sample_file)
-          end
-        end
+        @sample[source] ||= integration.sample(source) if valid_source?
       end
 
       private
-
-      # This method returns the default location in which integrations store their sample files
-      def default_sample_dir
-        @default_sample_dir ||= begin
-          File.join(Configuration.paths_templates_plugins, component)
-        end
-      end
 
       def get_mapping_fields
         # returns the mapping fields for the found mapping,
