@@ -35,6 +35,11 @@ module Dradis
 
       private
 
+      def source_fields
+        @source_fields ||= {}
+        @source_fields[source] ||= integration.source_fields(source)
+      end
+
       def get_mapping_fields
         # returns the mapping fields for the found mapping,
         # or the default mapping_fields
@@ -56,16 +61,9 @@ module Dradis
         end
       end
 
-      def source_fields
-        integration.source_fields(source)
-      end
-
       def valid_source?
+        valid_sources ||= integration.mapping_sources
         @source = source if valid_sources.include?(source.to_sym)
-      end
-
-      def valid_sources
-        integration.mapping_sources
       end
     end
   end
