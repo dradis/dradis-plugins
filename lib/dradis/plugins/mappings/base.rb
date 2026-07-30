@@ -8,17 +8,6 @@ module Dradis::Plugins::Mappings::Base
   end
 
   module ClassMethods
-    # Whether a new mapping can be created for this integration through the
-    # generic Mappings Manager form. Derived rather than declared: true only
-    # if the integration defines a real SOURCE_FIELDS constant (i.e. its
-    # sources are known ahead of time); an integration whose sources are
-    # minted as a side effect of something else instead (e.g. csv, when a
-    # new file format is uploaded) has nothing to define there, so this is
-    # automatically false, with nothing to override here.
-    def allows_mapping_creation?
-      self::Mapping.const_defined?(:SOURCE_FIELDS, false)
-    end
-
     def default_mapping_fields(source)
       default_mapping(source).map do |destination_field, content|
         MappingField.new(destination_field: destination_field, content: content)
