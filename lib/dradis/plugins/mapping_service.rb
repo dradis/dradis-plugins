@@ -7,7 +7,6 @@ module Dradis
         @destination = destination
         @integration = integration
         @component = @integration.meta[:name].to_s
-        @sample_dir = default_sample_dir
       end
 
       def apply_mapping(data:, source:, mapping_fields: nil)
@@ -31,21 +30,14 @@ module Dradis
       # This returns a sample of valid entry for the Mappings Manager
       def sample
         @sample ||= {}
-        if valid_source?
-          @sample[source] ||= begin
-            sample_file = File.join(@sample_dir, "#{source}.sample")
-            File.read(sample_file)
-          end
-        end
+        @sample[source] ||= integration.sample(source) if valid_source?
       end
 
       private
 
-      # This method returns the default location in which integrations store their sample files
-      def default_sample_dir
-        @default_sample_dir ||= begin
-          File.join(Configuration.paths_templates_plugins, component)
-        end
+      def source_fields
+        @source_fields ||= {}
+        @source_fields[source] ||= integration.source_fields(source)
       end
 
       def get_mapping_fields
@@ -61,7 +53,7 @@ module Dradis
         content.gsub(/{{\s?#{component}\[(\S*?)\]\s?}}/) do |field|
           name = field.split(/\[|\]/)[1]
 
-          if integration.source_fields(source).include?(name)
+          if source_fields.include?(name)
             field_processor.value(field: name)
           else
             "Field [#{field}] not recognized by the integration"
@@ -70,7 +62,8 @@ module Dradis
       end
 
       def valid_source?
-        @source = source if integration.mapping_sources.include?(source.to_sym)
+        valid_sources ||= integration.mapping_sources
+        @source = source if valid_sources.include?(source.to_sym)
       end
     end
   end

@@ -72,6 +72,17 @@ module Dradis::Plugins::Mappings::Base
       self::Mapping::SOURCE_FIELDS.keys
     end
 
+    # The sample content for a source, used by the Mappings Manager to
+    # preview an integration's mapping fields applied to real-looking data.
+    # Static-source integrations ship a real .sample file in the gem (see
+    # Dradis::Plugins::Templates::Samples, copied into place at boot);
+    # integrations whose sources aren't known ahead of time (e.g. csv) can
+    # override this instead.
+    def sample(source)
+      sample_file = File.join(Configuration.paths_templates_plugins, component, "#{source}.sample")
+      File.read(sample_file)
+    end
+
     def source_fields(source)
       if mapping_sources.include?(source.to_sym)
         self::Mapping::SOURCE_FIELDS[source.to_sym]
