@@ -5,6 +5,9 @@ module Dradis
   module Plugins
     module Upload
       class Importer
+
+        VALID_STATES = %w[draft published ready_for_review].freeze
+
         attr_accessor(
           :content_service,
           :default_user_id,
