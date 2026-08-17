@@ -2,6 +2,17 @@ module Dradis::Plugins::ContentService
   module Evidence
     extend ActiveSupport::Concern
 
+    def all_evidence
+      case scope
+      when :all
+        project.evidence
+      when :published
+        project.evidence.published
+      else
+        raise 'Unsupported scope!'
+      end
+    end
+
     def create_evidence(args = {})
       content = args.fetch(:content, default_evidence_content)
       node    = args.fetch(:node, default_node_parent)
