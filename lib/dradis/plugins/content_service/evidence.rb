@@ -15,9 +15,9 @@ module Dradis::Plugins::ContentService
 
     def create_evidence(args = {})
       content = args.fetch(:content, default_evidence_content)
-      node    = args.fetch(:node, default_node_parent)
-      issue   = args[:issue] || default_evidence_issue
-      state   = args.fetch(:state, @state)
+      node = args.fetch(:node, default_node_parent)
+      issue = args[:issue] || default_evidence_issue
+      state = args.fetch(:state, @state)
 
       # Using node.evidence.new would result in some evidence being saved later on.
       evidence = ::Evidence.new(issue_id: issue.id, content: content, node_id: node.id, state: state)
