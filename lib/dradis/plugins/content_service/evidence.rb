@@ -17,12 +17,15 @@ module Dradis::Plugins::ContentService
       content = args.fetch(:content, default_evidence_content)
       node    = args.fetch(:node, default_node_parent)
       issue   = args[:issue] || default_evidence_issue
+      state   = args.fetch(:state, @state)
 
       # Using node.evidence.new would result in some evidence being saved later on.
-      evidence = ::Evidence.new(issue_id: issue.id, content: content, node_id: node.id)
+      evidence = ::Evidence.new(issue_id: issue.id, content: content, node_id: node.id, state: state)
 
       if evidence.valid?
-        evidence = ::Evidence.find_or_create_by(issue_id: issue.id, node_id: node.id, content: content)
+        evidence = ::Evidence.find_or_create_by(issue_id: issue.id, node_id: node.id, content: content) do |e|
+          e.state = state
+        end
       else
         try_rescue_from_length_validation(
           model: evidence,
