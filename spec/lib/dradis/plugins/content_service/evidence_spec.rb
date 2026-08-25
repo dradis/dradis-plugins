@@ -74,4 +74,24 @@ describe 'Evidence content service' do
       expect(service.all_evidence.to_a).to match_array(@published_evidence)
     end
   end
+
+  describe '#evidence_for' do
+    let(:other_issue) { create(:issue, node: project.issue_library) }
+
+    let!(:published_evidence) { create(:evidence, node: node, issue: issue, state: :published) }
+    let!(:draft_evidence) { create(:evidence, node: node, issue: issue, state: :draft) }
+    let!(:other_issue_evidence) { create(:evidence, node: node, issue: other_issue, state: :published) }
+
+    it "returns only the given issue's evidence" do
+      expect(service.evidence_for(issue)).to match_array([published_evidence])
+      expect(service.evidence_for(other_issue)).to match_array([other_issue_evidence])
+    end
+
+    it 'only fetches #all_evidence once across multiple calls' do
+      expect(service).to receive(:all_evidence).once.and_call_original
+
+      service.evidence_for(issue)
+      service.evidence_for(other_issue)
+    end
+  end
 end

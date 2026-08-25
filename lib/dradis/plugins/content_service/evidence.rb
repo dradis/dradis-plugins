@@ -13,6 +13,17 @@ module Dradis::Plugins::ContentService
       end
     end
 
+    # Returns the (already scope-filtered) Evidence belonging to the given
+    # Issue. Callers with many Issues to process should prefer this over
+    # `issue.evidence`, which would bypass the export's Published/All scope.
+    #
+    # Memoizes a materialized copy of `all_evidence` so that calling this once
+    # per Issue doesn't re-query the database each time.
+    def evidence_for(issue)
+      @evidence_for_lookup ||= all_evidence.to_a
+      @evidence_for_lookup.select { |e| e.issue_id == issue.id }
+    end
+
     def create_evidence(args = {})
       content = args.fetch(:content, default_evidence_content)
       node = args.fetch(:node, default_node_parent)
