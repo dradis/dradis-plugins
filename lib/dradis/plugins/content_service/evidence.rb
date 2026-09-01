@@ -13,16 +13,6 @@ module Dradis::Plugins::ContentService
       end
     end
 
-    # Returns the (already scope-filtered) Evidence belonging to the given Issue.
-    # Memoizes per Issue so that calling this more than once for the same Issue doesn't re-query the database each time
-    #
-    # NOTE: cache is not currently memoized based on scope. Fine since scope is fixed for the lifetime of a 
-    # ContentService instance (per export)
-    def evidence_for(issue)
-      @evidence_for_lookup ||= {}
-      @evidence_for_lookup[issue.id] ||= all_evidence.where(issue_id: issue.id)
-    end
-
     def create_evidence(args = {})
       content = args.fetch(:content, default_evidence_content)
       node = args.fetch(:node, default_node_parent)
