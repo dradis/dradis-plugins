@@ -13,15 +13,14 @@ module Dradis::Plugins::ContentService
       end
     end
 
-    # Returns the (already scope-filtered) Evidence belonging to the given
-    # Issue. Callers with many Issues to process should prefer this over
-    # `issue.evidence`, which would bypass the export's Published/All scope.
+    # Returns the (already scope-filtered) Evidence belonging to the given Issue.
+    # Memoizes per Issue so that calling this more than once for the same Issue doesn't re-query the database each time
     #
-    # Memoizes a materialized copy of `all_evidence` so that calling this once
-    # per Issue doesn't re-query the database each time.
+    # NOTE: cache is not currently memoized based on scope. Fine since scope is fixed for the lifetime of a 
+    # ContentService instance (per export)
     def evidence_for(issue)
-      @evidence_for_lookup ||= all_evidence.to_a
-      @evidence_for_lookup.select { |e| e.issue_id == issue.id }
+      @evidence_for_lookup ||= {}
+      @evidence_for_lookup[issue.id] ||= all_evidence.where(issue_id: issue.id)
     end
 
     def create_evidence(args = {})
@@ -34,6 +33,9 @@ module Dradis::Plugins::ContentService
       evidence = ::Evidence.new(issue_id: issue.id, content: content, node_id: node.id, state: state)
 
       if evidence.valid?
+        # find_or_create_by is used here to avoid creating duplicate evidence for the same issue/node/content combination. 
+        # Don't include state in the query because we dont' want to create duplicate evidence with different states.
+        # If a new evidence is created, set the state otherwise leave it as-is
         evidence = ::Evidence.find_or_create_by(issue_id: issue.id, node_id: node.id, content: content) do |e|
           e.state = state
         end
