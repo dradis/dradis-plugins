@@ -1,3 +1,7 @@
+[v#.#.#] ([month] [YYYY])
+  - Add `all_evidence` to the Evidence content service, scoping evidence by the export's published/all scope
+  - Cascade chosen state on upload to Evidence records
+
 v5.3.0 (August 2026)
   - Add shared report template source resolution for mappings across ticketing integrations (Jira, DevOps, ServiceNow)
 
