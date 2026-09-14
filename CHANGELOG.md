@@ -1,4 +1,4 @@
-[v#.#.#] ([month] [YYYY])
+v5.4.0 (September 2026)
   - Add `all_evidence` to the Evidence content service, scoping evidence by the export's published/all scope
   - Cascade chosen state on upload to Evidence records
 
