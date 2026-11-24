@@ -1,3 +1,6 @@
+[v#.#.#] ([month] [YYYY])
+  - Use the main app's `track_export` to track report exports
+
 v5.5.0 (November 2026)
   - No changes
 
